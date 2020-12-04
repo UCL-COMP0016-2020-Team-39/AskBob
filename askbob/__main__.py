@@ -33,7 +33,7 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Stream from microphone to DeepSpeech using VAD")
+        description="Ask Bob: a customisable voice assistant.")
 
     parser.add_argument('-c', '--config', required=True,
                         help="The configuration file.")

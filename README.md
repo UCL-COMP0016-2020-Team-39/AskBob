@@ -18,3 +18,26 @@ Ask Bob may be run with the following command:
 ```bash
 python -m askbob -c config.ini
 ```
+
+Further help is available using the `--help` flag.
+```bash
+$ python -m askbob --help
+usage: __main__.py [-h] -c CONFIG [-w SAVEPATH] [-f FILE] [-d DEVICE]
+                   [-r RATE]
+
+Ask Bob: a customisable voice assistant.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c CONFIG, --config CONFIG
+                        The configuration file.
+  -w SAVEPATH, --savepath SAVEPATH
+                        Save .wav files of utterences to a given directory.
+  -f FILE, --file FILE  Read from a .wav file instead of the microphone.
+  -d DEVICE, --device DEVICE
+                        The device input index (int) as given by
+                        pyaudio.PyAudio.get_device_info_by_index(). Default:
+                        pyaudio.PyAudio.get_default_device().
+  -r RATE, --rate RATE  The input device sample rate (your device might
+                        require 44100Hz). Default: 16000.
+```
