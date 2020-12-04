@@ -5,7 +5,7 @@ import logging
 import numpy as np
 import os
 
-from askbob.audio.voice import VoiceAudioService
+from askbob.audio.listener import UtteranceService
 
 
 class TranscriptionEvent(enum.Enum):
@@ -21,10 +21,10 @@ class Transcriber:
         self.model = self.init_deepspeech(model, scorer)
 
         # Start audio
-        self.vas = VoiceAudioService(aggressiveness=aggressiveness,
-                                     device_index=device_index,
-                                     input_rate=rate,
-                                     filename=filename)
+        self.us = UtteranceService(aggressiveness=aggressiveness,
+                                   device_index=device_index,
+                                   input_rate=rate,
+                                   filename=filename)
 
         self.save_path = save_path
 
@@ -49,7 +49,7 @@ class Transcriber:
         stream_context = self.model.createStream()
         wav_data = bytearray()
         last_event = None
-        for utterance in self.vas.utterances():
+        for utterance in self.us.utterances():
             if utterance is not None:
                 if last_event != TranscriptionEvent.START_UTTERANCE:
                     logging.debug("Utterance started.")
@@ -67,7 +67,7 @@ class Transcriber:
                 text = stream_context.finishStream()
                 if text:
                     if self.save_path:
-                        self.vas._write_wav(os.path.join(self.save_path, datetime.datetime.now().strftime(
+                        self.us.write_wav(os.path.join(self.save_path, datetime.datetime.now().strftime(
                             "%Y-%m-%d_%H-%M-%S - " + text + ".wav")), wav_data)
 
                 last_event = TranscriptionEvent.END_UTTERANCE

@@ -1,6 +1,7 @@
+from askbob.audio.speaker import SpeechService
 import halo
 import logging
-from askbob.audio.voice import VoiceAudioService
+from askbob.audio.listener import UtteranceService
 from askbob.audio.transcriber import Transcriber, TranscriptionEvent
 
 
@@ -9,15 +10,18 @@ def main(args):
 
     config = configparser.ConfigParser()
     config.read(args.config)
-    voice = config['Voice']
 
-    transcriber = Transcriber(model=voice['model'], scorer=voice['scorer'], aggressiveness=voice.getint('aggressiveness'),
-                              device_index=args.device, rate=args.rate, filename=args.file, save_path=args.savepath)
+    transcriber = Transcriber(model=config['Listener']['model'], scorer=config['Listener']['scorer'],
+                              aggressiveness=config['Listener'].getint('aggressiveness'), device_index=args.device,
+                              rate=args.rate, filename=args.file, save_path=args.savepath)
+
+    speaker = SpeechService(config['Speaker']['voice_id'])
 
     spinner = halo.Halo(spinner='line')
 
     print("Listening (press Ctrl-C to exit).")
-    for state, text in transcriber.transcribe():
+    transcriptions = transcriber.transcribe()
+    for state, text in transcriptions:
         if state == TranscriptionEvent.START_UTTERANCE:
             spinner.start()
         elif state == TranscriptionEvent.END_UTTERANCE:
@@ -25,6 +29,8 @@ def main(args):
 
             if text:
                 print("=> %s" % text)
+                speaker.say(text)
+
         else:
             logging.error("Unknown transcription event: " + state)
 
@@ -47,7 +53,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--device', type=int, default=None,
                         help="The device input index (int) as given by pyaudio.PyAudio.get_device_info_by_index(). Default: pyaudio.PyAudio.get_default_device().")
 
-    parser.add_argument('-r', '--rate', type=int, default=VoiceAudioService.sample_rate,
-                        help=f"The input device sample rate (your device might require 44100Hz). Default: {VoiceAudioService.sample_rate}.")
+    parser.add_argument('-r', '--rate', type=int, default=UtteranceService.sample_rate,
+                        help=f"The input device sample rate (your device might require 44100Hz). Default: {UtteranceService.sample_rate}.")
 
     main(parser.parse_args())

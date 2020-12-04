@@ -8,7 +8,7 @@ import wave
 import webrtcvad
 
 
-class VoiceAudioService:
+class UtteranceService:
 
     format = pyaudio.paInt16
     channels = 1
@@ -75,7 +75,7 @@ class VoiceAudioService:
         resample16 = np.array(resample, dtype=np.int16)
         return resample16.tobytes()
 
-    def _write_wav(self, filename, data):
+    def write_wav(self, filename, data):
         logging.info("Writing wav file: %s", filename)
         wf = wave.open(filename, 'wb')
         wf.setnchannels(self.channels)
@@ -121,6 +121,7 @@ class VoiceAudioService:
                         triggered = False
                         yield None
                         ring_buffer.clear()
+                        self.buffer_queue = queue.Queue()
                 else:
                     ring_buffer.append((frame, is_speech))
                     num_voiced = len(
@@ -131,6 +132,7 @@ class VoiceAudioService:
                         for f, _ in ring_buffer:
                             yield f
                         ring_buffer.clear()
+
         except KeyboardInterrupt:
             pass
         finally:
