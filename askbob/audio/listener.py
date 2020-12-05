@@ -89,7 +89,7 @@ class UtteranceService:
 
     def _init_filter(self, lowpass_frequency, highpass_frequency):
         nyquist_frequency = 0.5 * self.sample_rate
-        self.b, self.a = scipy.signal.filter_design.butter(5, [
+        self.b, self.a = scipy.signal.filter_design.butter(4, [
             lowpass_frequency / nyquist_frequency,
             highpass_frequency / nyquist_frequency
         ], btype='bandpass')
