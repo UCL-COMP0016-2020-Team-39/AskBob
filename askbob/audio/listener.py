@@ -4,6 +4,7 @@ import numpy as np
 import pyaudio
 import queue
 import scipy
+import scipy.signal
 import wave
 import webrtcvad
 
@@ -20,7 +21,7 @@ class UtteranceService:
     frame_duration_ms = property(
         lambda self: 1000 * self.block_size // self.sample_rate)
 
-    def __init__(self, aggressiveness=1, device_index=None, input_rate=None, filename=None):
+    def __init__(self, aggressiveness=1, device_index=None, input_rate=None, filename=None, lowpass_frequency=65, highpass_frequency=4000):
         self.buffer_queue = queue.Queue()
         self.device_index = device_index
         self.input_rate = input_rate
@@ -28,6 +29,8 @@ class UtteranceService:
         self.pa = pyaudio.PyAudio()
         self.stream = self._create_stream(filename)
         self.vad = webrtcvad.Vad(aggressiveness)
+
+        self._init_filter(lowpass_frequency, highpass_frequency)
 
     def _create_stream(self, filename):
         def callback(in_data, frame_count, time_info, status):
@@ -84,14 +87,30 @@ class UtteranceService:
         wf.writeframes(data)
         wf.close()
 
+    def _init_filter(self, lowpass_frequency, highpass_frequency):
+        nyquist_frequency = 0.5 * self.sample_rate
+        self.b, self.a = scipy.signal.filter_design.butter(5, [
+            lowpass_frequency / nyquist_frequency,
+            highpass_frequency / nyquist_frequency
+        ], btype='bandpass')
+        self.zi = scipy.signal.signaltools.lfilter_zi(self.b, self.a)
+
+    def _filter(self, data):
+        data16 = np.frombuffer(data, dtype=np.int16)
+
+        filtered, self.zi = scipy.signal.signaltools.lfilter(
+            self.b, self.a, data16, axis=0, zi=self.zi)
+
+        return np.array(filtered, dtype=np.int16).tobytes()
+
     def _frames(self):
         """Generator that yields all audio frames from microphone, blocking if necessary."""
         if self.input_rate == self.sample_rate:
             while True:
-                yield self.buffer_queue.get()
+                yield self._filter(self.buffer_queue.get())
         else:
             while True:
-                yield self._resample(self.buffer_queue.get())
+                yield self._filter(self._resample(self.buffer_queue.get()))
 
     def utterances(self, padding_ms=300, ratio=0.75):
         """This is a generator that yields series of consecutive audio frames for each utterence, separated by a single None. It determines the level of voice activity using the ratio of frames in padding_ms. It uses a buffer to include padding_ms prior to being triggered.
