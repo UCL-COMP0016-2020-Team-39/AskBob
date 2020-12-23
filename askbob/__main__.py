@@ -1,3 +1,5 @@
+import os
+from askbob.action.matcher import Matcher
 from askbob.audio.speaker import SpeechService
 import halo
 import logging
@@ -11,25 +13,44 @@ def main(args):
     config = configparser.ConfigParser()
     config.read(args.config)
 
-    transcriber = Transcriber(model=config['Listener']['model'], scorer=config['Listener']['scorer'],
-                              aggressiveness=config['Listener'].getint('aggressiveness'), device_index=args.device,
-                              rate=args.rate, filename=args.file, save_path=args.savepath)
+    if 'Listener' not in config:
+        raise RuntimeError("No listener configuration provided.")
+
+    if 'model' not in config['Listener']:
+        raise RuntimeError("No listener model provided.")
+
+    model_path = config['Listener']['model']
+    scorer_path = config['Listener']['scorer'] if 'scorer' in config['Listener'] else ''
+
+    if os.path.isdir(model_path):
+        model_path = os.path.join(model_path, 'output_graph.pb')
+        scorer_path = os.path.join(model_path, scorer_path)
+
+    transcriber = Transcriber(model=model_path, scorer=scorer_path, aggressiveness=config['Listener'].getint(
+        'aggressiveness', fallback=1), device_index=args.device, rate=args.rate, filename=args.file, save_path=args.savepath)
 
     speaker = SpeechService(config['Speaker']['voice_id'])
+
+    matcher = Matcher()
 
     spinner = halo.Halo(spinner='line')
 
     print("Listening (press Ctrl-C to exit).")
-    transcriptions = transcriber.transcribe()
-    for state, text in transcriptions:
+    for state, text in transcriber.transcribe():
         if state == TranscriptionEvent.START_UTTERANCE:
             spinner.start()
         elif state == TranscriptionEvent.END_UTTERANCE:
             spinner.stop()
 
             if text:
-                print("=> %s" % text)
-                speaker.say(text)
+                print("==", text)
+
+                action = matcher.match(text)
+
+                response = action.execute()
+                print("=>", response)
+
+                speaker.say(response)
 
         else:
             logging.error("Unknown transcription event: " + state)

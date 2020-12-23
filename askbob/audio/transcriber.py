@@ -28,7 +28,7 @@ class Transcriber:
 
         self.save_path = save_path
 
-    def init_deepspeech(self, model_path, scorer_path):
+    def init_deepspeech(self, model_path, scorer_path=""):
         logging.info("Initialising DeepSpeech model: %s", scorer_path)
 
         if os.path.isdir(model_path):
