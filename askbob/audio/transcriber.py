@@ -37,7 +37,7 @@ class Transcriber:
 
         model = deepspeech.Model(model_path)
         if scorer_path:
-            logging.info("Scorer: %s", scorer_path)
+            logging.info("Enabling the external scorer: %s", scorer_path)
             model.enableExternalScorer(scorer_path)
 
         return model
