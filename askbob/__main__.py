@@ -1,10 +1,11 @@
 import os
-from askbob.action.matcher import Matcher
-from askbob.audio.speaker import SpeechService
 import halo
 import logging
+
+from askbob.audio.speaker import SpeechService
 from askbob.audio.listener import UtteranceService
 from askbob.audio.transcriber import Transcriber, TranscriptionEvent
+from askbob.action.responder import ResponseService
 
 
 def main(args):
@@ -31,7 +32,7 @@ def main(args):
 
     speaker = SpeechService(config['Speaker']['voice_id'])
 
-    matcher = Matcher()
+    responder = ResponseService(config['Rasa']['endpoint_base'])
 
     spinner = halo.Halo(spinner='line')
 
@@ -45,12 +46,9 @@ def main(args):
             if text:
                 print("==", text)
 
-                action = matcher.match(text)
-
-                response = action.execute()
-                print("=>", response)
-
-                speaker.say(response)
+                for response in responder.respond(text):
+                    print("=>", response)
+                    speaker.say(response)
 
         else:
             logging.error("Unknown transcription event: " + state)
