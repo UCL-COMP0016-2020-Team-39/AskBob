@@ -6,9 +6,9 @@ class ResponseService:
     def __init__(self, endpoint_base):
         self.endpoint = endpoint_base + "/webhooks/rest/webhook"
 
-    def respond(self, query):
+    def respond(self, query, sender="askbob"):
         r = requests.post(self.endpoint, json={
-            "sender": "askbob",
+            "sender": sender,
             "message": query
         }).json()
 
