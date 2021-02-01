@@ -1,8 +1,6 @@
 from .main import main
 from .setup import setup
 
-from askbob.audio.listener import UtteranceService
-
 
 if __name__ == '__main__':
     import argparse
