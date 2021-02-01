@@ -1,12 +1,12 @@
 import os
 import logging
 
-from askbob.audio.speaker import SpeechService
-from askbob.audio.transcriber import Transcriber, TranscriptionEvent
-from askbob.action.responder import HTTPResponseService, RasaResponseService
+from askbob.action.responder import RasaResponseService
 
 
 def make_transcriber(config, device, rate, file, savepath):
+    from askbob.audio.transcriber import Transcriber
+
     if 'Listener' not in config:
         raise RuntimeError("No listener configuration provided.")
 
@@ -25,6 +25,8 @@ def make_transcriber(config, device, rate, file, savepath):
 
 
 async def interactive_loop(args, config, responder):
+    from askbob.audio.speaker import SpeechService
+    from askbob.audio.transcriber import TranscriptionEvent
     import halo
 
     transcriber = make_transcriber(
