@@ -20,8 +20,8 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--device', type=int, default=None,
                         help="The device input index (int) as given by pyaudio.PyAudio.get_device_info_by_index(). Default: pyaudio.PyAudio.get_default_device().")
 
-    parser.add_argument('-r', '--rate', type=int, default=UtteranceService.sample_rate,
-                        help=f"The input device sample rate (your device might require 44100Hz). Default: {UtteranceService.sample_rate}.")
+    parser.add_argument('-r', '--rate', type=int, default=16000,
+                        help=f"The input device sample rate (your device might require 44100Hz). Default: 16000.")
 
     parser.add_argument('-s', '--serve', default=False, action='store_true',
                         help="Run Ask Bob as a server instead of interactively.")
