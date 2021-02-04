@@ -7,7 +7,16 @@ class ModelGenerator:
     def __init__(self):
         pass
 
-    def generate_config_yml(self, location):
+    def get_intent(self, intent: str, plugin: str):
+        return 'ask_{}_{}'.format(intent, plugin)
+
+    def get_action(self, action: str, plugin: str):
+        if action.startswith('utter_'):
+            return '{}_{}'.format(action, plugin)
+        else:
+            return 'action_{}_{}'.format(action, plugin)
+
+    def generate_config_yml(self, location: str):
         with open(location + '/config.yml', 'w') as f:
             f.write("""language: en
 pipeline:
@@ -66,16 +75,25 @@ policies:
                 raise RuntimeError("No intents have been registered.")
 
             f.write('\nintents:\n')
-            f.writelines(['  - ' + intent['id'] +
-                          '\n' for intent in config['intents']])
+            f.writelines(['  - {}\n'.format(self.get_intent(intent['intent_id'], plugin))
+                          for intent in config['intents']])
+            f.write('\n\n')
 
-            # Responses
-            f.write('\nresponses:\n')
-            for response in config['responses']:
-                f.write('  ' + response['id'] + ': \n')
-                f.writelines(['    - text: "' + text +
-                              '"\n' for text in response['text']])
-                f.write('\n')
+            if 'actions' in config:
+                f.write('\nactions:\n')
+                f.writelines(['  - {}\n'.format(self.get_action(action, plugin))
+                              for action in config['actions']])
+                f.write('\n\n')
+
+                # Responses
+            if 'responses' in config:
+                f.write('\nresponses:\n')
+                for response in config['responses']:
+                    f.write('  {}: \n'.format(self.get_action(
+                        response['response_id'], plugin)))
+                    f.writelines(['    - text: "' + text +
+                                  '"\n' for text in response['text']])
+                    f.write('\n')
 
             # Session config
             f.write("""
@@ -96,10 +114,11 @@ session_config:
             # NLU
             f.write('\nnlu:\n')
             for intent in config['intents']:
-                if 'id' not in intent or 'examples' not in intent:
+                if 'intent_id' not in intent or 'examples' not in intent:
                     raise RuntimeError("Intents must have an id and examples.")
 
-                f.write('  - intent: ' + intent['id'] + '\n    examples: |\n')
+                f.write('  - intent: {}\n    examples: |\n'.format(
+                    self.get_intent(intent['intent_id'], plugin)))
                 f.writelines(
                     ['      - ' + example + '\n' for example in intent['examples']])
                 f.write('\n')
@@ -110,11 +129,9 @@ session_config:
 
                 if 'skills' in config:
                     for skill in config['skills']:
-                        f.write('  - rule: ' +
-                                (skill['description'] if 'description' in skill else '')+'\n    steps:\n')
-                        f.write('      - intent: ' + skill['intent'] + '\n')
-
-                        f.writelines(['      - action: ' + action + '\n'
+                        f.write('  - rule: {}\n    steps:\n      - intent: {}\n'.format(
+                            skill['description'] if 'description' in skill else '', self.get_intent(skill['intent'], plugin)))
+                        f.writelines(['      - action: {}\n'.format(self.get_action(action, plugin))
                                       for action in skill['actions']])
                         f.write('\n')
 
@@ -123,21 +140,21 @@ session_config:
                     for rule in config['rules']:
                         f.write('  - rule: ' +
                                 (rule['description'] if 'description' in rule else '')+'\n    steps:\n')
-                        f.writelines(['      - ' + step['type'] + ': ' + step['id'] + '\n'
+                        f.writelines(['      - ' + step['type'] + ': ' + step['value'] + '\n'
                                       for step in rule['steps']])
                         f.write('\n')
 
             # Stories
-            if 'stories' in config:
+            """ if 'stories' in config:
                 f.write('\nstories:\n')
                 for rule in config['stories']:
                     f.write('  - story: ' +
                             (rule['description'] if 'description' in rule else '')+'\n    steps:\n')
-                    f.writelines(['      - ' + step['type'] + ': ' + step['id'] + '\n'
+                    f.writelines(['      - ' + step['type'] + ': ' + step['step_id'] + '\n'
                                   for step in rule['steps']])
-                    f.write('\n')
+                    f.write('\n') """
 
-    def generate(self, configs, location, plugin="main"):
+    def generate(self, configs, location):
         config_location = location + '/config'
         output_location = location + '/models'
 
@@ -157,6 +174,7 @@ session_config:
         self.generate_endpoints_yml(config_location)
 
         for config in configs:
+            plugin = config['plugin'] if 'plugin' in config else 'main'
             self.generate_domain(config, config_location, plugin)
             self.generate_training_data(config, config_location, plugin)
 
@@ -173,11 +191,3 @@ session_config:
             raise RuntimeError("Training could not be completed.")
 
         return result
-
-
-if __name__ == '__main__':
-    import json
-    config = json.load(open('config.json', 'r'))
-
-    mg = ModelGenerator()
-    mg.generate([config], "data/rasa")
