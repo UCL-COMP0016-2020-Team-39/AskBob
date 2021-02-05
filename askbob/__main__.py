@@ -26,7 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--serve', default=False, action='store_true',
                         help="Run Ask Bob as a server instead of interactively.")
 
-    parser.add_argument('--setup',
+    parser.add_argument('--setup', const=".", nargs="?",
                         help="Setup Ask Bob from the configuration JSON file provided.")
 
     args = parser.parse_args()

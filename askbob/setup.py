@@ -18,9 +18,10 @@ def setup(args, main_config):
             except:
                 logging.error("Could not load plugin: " + plugin)
 
-    config = json.load(open(args.setup, 'r'))
-    config['plugin'] = 'main'
-    configs.append(config)
+    if args.setup and args.setup != ".":
+        config = json.load(open(args.setup, 'r'))
+        config['plugin'] = 'main'
+        configs.append(config)
 
     mg = ModelGenerator()
     mg.generate(configs, main_config['Rasa']['config'],
