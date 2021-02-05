@@ -1,6 +1,5 @@
 from rasa.utils.endpoints import EndpointConfig
 from rasa.core.agent import Agent
-import asyncio
 import requests
 
 
@@ -19,11 +18,14 @@ class RasaResponseService(ResponseService):
     agent: Agent
 
     def __init__(self, model_dir: str = "data/rasa/models") -> None:
+        # Action Server
+        import sys
+        import subprocess
+        subprocess.Popen([sys.executable, "-m", "askbob.action_server"])
+
+        # Main Rasa Model
         from rasa.model import get_latest_model
-
         model_path = get_latest_model(model_dir)
-
-        # interpreter = NaturalLanguageInterpreter.create(model_path)
         endpoint = EndpointConfig("http://localhost:5055/webhook")
         self.agent = Agent.load(model_path, action_endpoint=endpoint)
 
