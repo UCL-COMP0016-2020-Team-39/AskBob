@@ -13,6 +13,18 @@ class ResponseService:
             "The response service has not been implemented.")
 
 
+def yielder(m):
+    if "text" in m:
+        return {"text": m["text"]}
+    elif "image" in m:
+        return {"image": m["image"]}
+    elif "custom" in m:
+        return {"custom": m["custom"]}
+    else:
+        return {"other": m}
+        # NOTE: buttons are not supported
+
+
 class RasaResponseService(ResponseService):
 
     agent: Agent
@@ -34,12 +46,7 @@ class RasaResponseService(ResponseService):
 
     async def handle(self, query: str, sender: str = "askbob"):
         for m in await self.agent.handle_text(text_message=query, sender_id=sender):
-            if "text" in m:
-                yield m["text"]
-            elif "image" in m:
-                yield "[Image] " + m["image"]
-            else:
-                yield "[Media]"
+            yield yielder(m)
 
 
 class HTTPResponseService(ResponseService):
@@ -54,8 +61,4 @@ class HTTPResponseService(ResponseService):
         }).json()
 
         for m in r:
-            if "text" in m:
-                yield m["text"]
-
-            if "image" in m:
-                yield "[Image] " + m["image"]
+            yield yielder(m)
