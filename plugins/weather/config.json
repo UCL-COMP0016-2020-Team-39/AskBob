@@ -1,0 +1,31 @@
+{
+    "plugin": "weather",
+    "entities": [
+        "GPE"
+    ],
+    "intents": [
+        {
+            "intent_id": "ask_weather",
+            "examples": [
+                "what is the weather in Manchester?",
+                "what's the weather in Leeds?",
+                "what's the temperature in London?",
+                "what's the temperature in Bloomsbury right now?",
+                "how hot is it in New York?",
+                "how cold is it in Oslo?"
+            ]
+        }
+    ],
+    "actions": [
+        "fetch_weather"
+    ],
+    "skills": [
+        {
+            "description": "give the weather at a given location",
+            "intent": "ask_weather",
+            "actions": [
+                "fetch_weather"
+            ]
+        }
+    ]
+}

@@ -70,7 +70,13 @@ policies:
             f.write('\nintents:\n')
             f.writelines(['  - {}\n'.format(self.get_intent(intent['intent_id'], plugin))
                           for intent in config['intents']])
-            f.write('\n\n')
+            f.write('\n')
+
+            if 'entities' in config:
+                f.write('\nentities:\n')
+                f.writelines(['  - {}\n'.format(entity)
+                              for entity in config['entities']])
+                f.write('\n')
 
             if 'actions' in config:
                 f.write('\nactions:\n')
