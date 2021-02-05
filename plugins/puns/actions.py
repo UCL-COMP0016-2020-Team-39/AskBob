@@ -12,6 +12,7 @@ class ActionFetchJoke(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
         dispatcher.utter_message(text="One joke, coming right up!")
 
         r = requests.get(url="https://icanhazdadjoke.com/",
