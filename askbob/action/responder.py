@@ -21,7 +21,7 @@ class RasaResponseService(ResponseService):
         # Action Server
         import sys
         import subprocess
-        subprocess.Popen([sys.executable, "-m", "askbob.action_server"])
+        subprocess.Popen([sys.executable, "-m", "askbob.action.server"])
 
         # Main Rasa Model
         from rasa.model import get_latest_model
