@@ -1,19 +1,21 @@
 
 
-def setup(args, config):
+def setup(args, main_config):
     import logging
     import json
     import os
     from askbob.plugin.config import ModelGenerator
 
+    plugins_folder = main_config['Plugins']['location']
+
     configs = []
-    for plugin in os.listdir('plugins'):
-        if not plugin.startswith('.') and os.path.isdir(os.path.join('plugins', plugin)):
+    for plugin in os.listdir(plugins_folder):
+        if not plugin.startswith('.') and os.path.isdir(os.path.join(plugins_folder, plugin)):
             try:
                 configs.append(
-                    json.load(open(os.path.join('plugins', plugin, 'config.json'), 'r')))
+                    json.load(open(os.path.join(plugins_folder, plugin, 'config.json'), 'r')))
                 logging.info("Loaded plugin: " + plugin)
-            except Exception as e:
+            except:
                 logging.error("Could not load plugin: " + plugin)
 
     config = json.load(open(args.setup, 'r'))
@@ -21,4 +23,5 @@ def setup(args, config):
     configs.append(config)
 
     mg = ModelGenerator()
-    mg.generate(configs, os.path.join('data', 'rasa'))
+    mg.generate(configs, main_config['Rasa']['config'],
+                main_config['Rasa']['model'])

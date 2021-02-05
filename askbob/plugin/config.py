@@ -148,13 +148,7 @@ session_config:
                                   for step in rule['steps']])
                     f.write('\n') """
 
-    def generate(self, configs, location):
-        config_location = location + '/config'
-        output_location = location + '/models'
-
-        if not os.path.exists(location):
-            os.makedirs(location)
-
+    def generate(self, configs, config_location, output_location):
         if os.path.exists(config_location):
             shutil.rmtree(config_location)
 
