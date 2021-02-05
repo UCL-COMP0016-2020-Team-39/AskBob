@@ -60,14 +60,7 @@ policies:
   url: "http://localhost:5055/webhook\"""")
 
     def generate_domain(self, config, location, plugin):
-        domain_path = location + '/domain'
-
-        if os.path.exists(domain_path):
-            shutil.rmtree(domain_path)
-
-        os.makedirs(domain_path)
-
-        with open(location + '/domain/{}.yml'.format(plugin), 'w') as f:
+        with open(os.path.join(location, plugin + '.yml'), 'w') as f:
             f.write('version: "2.0"\n')
 
             # Intents
@@ -103,12 +96,7 @@ session_config:
 """)
 
     def generate_training_data(self, config, location, plugin):
-        if os.path.exists(location + '/training'):
-            shutil.rmtree(location + '/training')
-
-        os.makedirs(location + '/training')
-
-        with open(location + '/training/{}.yml'.format(plugin), 'w') as f:
+        with open(os.path.join(location, plugin + '.yml'), 'w') as f:
             f.write('version: "2.0"\n')
 
             # NLU
@@ -173,10 +161,20 @@ session_config:
         self.generate_credentials_yml(config_location)
         self.generate_endpoints_yml(config_location)
 
+        domain_path = os.path.join(config_location, 'domain')
+        if os.path.exists(domain_path):
+            shutil.rmtree(domain_path)
+        os.makedirs(domain_path)
+
+        training_path = os.path.join(config_location, 'training')
+        if os.path.exists(training_path):
+            shutil.rmtree(training_path)
+        os.makedirs(training_path)
+
         for config in configs:
             plugin = config['plugin'] if 'plugin' in config else 'main'
-            self.generate_domain(config, config_location, plugin)
-            self.generate_training_data(config, config_location, plugin)
+            self.generate_domain(config, domain_path, plugin)
+            self.generate_training_data(config, training_path, plugin)
 
         from rasa import train
 

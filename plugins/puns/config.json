@@ -1,0 +1,71 @@
+{
+    "plugin": "puns",
+    "intents": [
+        {
+            "intent_id": "greeting",
+            "examples": [
+                "Hello",
+                "How are you?",
+                "How's it going?",
+                "What's new?"
+            ]
+        },
+        {
+            "intent_id": "joke",
+            "examples": [
+                "tell me a joke",
+                "tell me a joke please",
+                "tell me a dad joke",
+                "tell me a dad joke please",
+                "tell me a pun",
+                "tell me a pun please",
+                "give me a joke",
+                "give me a joke please",
+                "give me a dad joke",
+                "give me a dad joke please",
+                "give me a pun",
+                "give me a pun please",
+                "could you please tell me a joke?",
+                "could you tell me a joke?",
+                "I'd love to hear a joke",
+                "I'd love to hear a dad joke",
+                "I'd love to hear a pun",
+                "give me your cheesiest joke",
+                "give me a cheesy joke",
+                "tell me a cheesy joke",
+                "tell me something funny"
+            ]
+        }
+    ],
+    "responses": [
+        {
+            "response_id": "utter_great",
+            "text": [
+                "how have you been",
+                "long time no see",
+                "great to see you",
+                "nice to have you here!"
+            ]
+        }
+    ],
+    "actions": [
+        "fetch_joke"
+    ],
+    "skills": [
+        {
+            "description": "tell a joke",
+            "intent": "joke",
+            "actions": [
+                "fetch_joke"
+            ]
+        },
+        {
+            "description": "greet and joke",
+            "intent": "greeting",
+            "actions": [
+                "utter_great",
+                "fetch_joke"
+            ]
+        }
+    ]
+}
