@@ -1,0 +1,28 @@
+{
+    "plugin": "time",
+    "intents": [
+        {
+            "intent_id": "ask_time",
+            "examples": [
+                "What time is it?",
+                "What time is it right now?",
+                "What time is it now?",
+                "Tell me the time",
+                "Tell me the time right now",
+                "Tell me the time now"
+            ]
+        }
+    ],
+    "actions": [
+        "fetch_time"
+    ],
+    "skills": [
+        {
+            "description": "give the system time",
+            "intent": "ask_time",
+            "actions": [
+                "fetch_time"
+            ]
+        }
+    ]
+}
