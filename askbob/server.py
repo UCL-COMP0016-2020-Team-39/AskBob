@@ -40,4 +40,4 @@ def serve(responder: ResponseService, config: dict):
     logging.info("Running Ask Bob HTTP server.")
     app.run(host=config['Server']['host'],
             port=int(config['Server']['port']),
-            access_log=True)
+            access_log=False)

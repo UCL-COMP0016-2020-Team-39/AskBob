@@ -8,7 +8,10 @@ class ModelGenerator:
         pass
 
     def get_intent(self, intent: str, plugin: str):
-        return 'ask_{}_{}'.format(intent, plugin)
+        if plugin == "main":
+            return intent
+        else:
+            return '{}_{}'.format(intent, plugin)
 
     def get_action(self, action: str, plugin: str):
         if action.startswith('utter_'):

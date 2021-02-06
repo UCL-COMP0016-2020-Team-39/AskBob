@@ -12,7 +12,7 @@
             ]
         },
         {
-            "intent_id": "joke",
+            "intent_id": "ask_joke",
             "examples": [
                 "tell me a joke",
                 "tell me a joke please",
@@ -54,7 +54,7 @@
     "skills": [
         {
             "description": "tell a joke",
-            "intent": "joke",
+            "intent": "ask_joke",
             "actions": [
                 "fetch_joke"
             ]
