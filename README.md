@@ -4,15 +4,21 @@ The AskBob voice assistant.
 ## Installation
 You will need to find a [mozilla\DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.2)-compatible model and scorer to be used with AskBob. Once downloaded, it is suggested that the files be placed in the `data` folder and the configuration file `config.ini` be updated with the correct file names.
 
-Project dependencies may be installed by running the following commands:
+Common project dependencies may be installed by running the following commands:
 ```bash
-pip install -r requirements.txt
+pip install -r requirements/common.txt
 python -m spacy download en_core_web_md
+python -m spacy link en_core_web_md en
 ```
 
-On Windows, you may be missing a `portaudio` binary used by Ask Bob, which may have be compiled from source.
+If you want to use the voice assistant with speech transcription and synthesis enabled, you must also run the following command:
+```bash
+pip install -r requirements/voice.txt
+```
 
-**Note**: Christoph Gohlke maintains unofficial Windows binaries for Python extension packages, including for [PyAudio](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio), which may be installed using `pip install`.
+On Windows, you may be missing a `portaudio` binary used by Ask Bob, which may have be compiled from source, before the above command may complete successfully.
+
+**Note**: Christoph Gohlke maintains unofficial Windows binaries for Python extension packages, including for [PyAudio](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio), which may be installed using `pip install INSERT_BINARY_LOCATION`.
 
 You may have to modify the configuration depending on the voices available on your system, which may be found using the following sequence of Python commands:
 ```python
@@ -30,8 +36,8 @@ python -m askbob -c config.ini
 Further help is available using the `--help` flag.
 ```bash
 $ python -m askbob --help
-usage: __main__.py [-h] -c CONFIG [-w SAVEPATH] [-f FILE] [-d DEVICE]
-                   [-r RATE]
+usage: __main__.py [-h] [-c CONFIG] [-w SAVEPATH] [-f FILE] [-d DEVICE]
+                   [-r RATE] [-s] [--setup [SETUP]]
 
 Ask Bob: a customisable voice assistant.
 
@@ -48,6 +54,9 @@ optional arguments:
                         pyaudio.PyAudio.get_default_device().
   -r RATE, --rate RATE  The input device sample rate (your device might
                         require 44100Hz). Default: 16000.
+  -s, --serve           Run Ask Bob as a server instead of interactively.
+  --setup [SETUP]       Setup Ask Bob from the configuration JSON file
+                        provided and those from installed plugins.
 ```
 
 ## Tests
