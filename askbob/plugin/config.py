@@ -40,7 +40,7 @@ pipeline:
   - name: ResponseSelector
     epochs: 100
   - name: FallbackClassifier
-    threshold: 0.6
+    threshold: 0.75
     ambiguity_threshold: 0.1
 
 policies:
