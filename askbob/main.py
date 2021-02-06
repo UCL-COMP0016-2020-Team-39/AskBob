@@ -1,4 +1,3 @@
-from askbob.util import setup_logging
 import os
 import logging
 
@@ -53,8 +52,6 @@ async def interactive_loop(args, config, responder):
 
 
 def main(args, config):
-    setup_logging()
-
     responder = RasaResponseService(config['Rasa']['model'])
 
     if args.serve:

@@ -1,4 +1,3 @@
-import logging
+from askbob.util import setup_logging
 
-logging.basicConfig(level=logging.INFO,
-                    format="%(asctime)s [%(levelname)s] %(message)s")
+setup_logging()
