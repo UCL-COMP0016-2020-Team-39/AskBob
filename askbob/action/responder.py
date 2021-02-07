@@ -33,13 +33,17 @@ class RasaResponseService(ResponseService):
         # Action Server
         import sys
         import subprocess
-        subprocess.Popen([sys.executable, "-m", "askbob.action.server"])
+        self.action_server = subprocess.Popen(
+            [sys.executable, "-m", "askbob.action.server"])
 
         # Main Rasa Model
         from rasa.model import get_latest_model
         model_path = get_latest_model(model_dir)
         endpoint = EndpointConfig("http://localhost:5055/webhook")
         self.agent = Agent.load(model_path, action_endpoint=endpoint)
+
+    def __del__(self):
+        self.action_server.terminate()
 
     def is_ready(self) -> bool:
         return self.agent.is_ready()
