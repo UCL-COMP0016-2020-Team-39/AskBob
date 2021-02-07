@@ -4,19 +4,32 @@ The AskBob voice assistant.
 ## Installation
 You will need to find a [mozilla\DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.2)-compatible model and scorer to be used with AskBob. Once downloaded, it is suggested that the files be placed in the `data` folder and the configuration file `config.ini` be updated with the correct file names.
 
-Common project dependencies may be installed by running the following commands:
+First, ensure you have Python 3.7+ and `pip` installed on your system. Pip may be installed using the following command:
 ```bash
-pip install -r requirements/common.txt
-python -m spacy download en_core_web_md
-python -m spacy link en_core_web_md en
+$ curl https://bootstrap.pypa.io/get-pip.py | sudo python3.7
+```
+On Linux, you must ensure you have the right Python dev package installed, e.g. `python3.7-dev` on Ubuntu.
+
+Next, ensure that your versions of `pip`, `setuptools` and `wheel` are up to date.
+```bash
+$ python -m pip install -U pip setuptools wheel
 ```
 
-If you want to use the voice assistant with speech transcription and synthesis enabled, you must also run the following command:
+Dependencies shared across all Ask Bob utilisation modes (interactively or as a REST API server) may then be installed by running the follwoing commands:
 ```bash
-pip install -r requirements/voice.txt
+$ python -m pip install -r requirements/common.txt
+$ python -m spacy download en_core_web_md
+$ python -m spacy link en_core_web_md en
 ```
 
-On Windows, you may be missing a `portaudio` binary used by Ask Bob, which may have be compiled from source, before the above command may complete successfully.
+If you want to use the voice assistant interactively (i.e. with speech transcription and synthesis enabled), you must have a `portaudio` binary installed.
+
+On Ubuntu, this can be done with the following command:
+```bash
+$ sudo apt install portaudio19-dev python3-pyaudio
+```
+
+On Windows, you may have to compile the `portaudio` binary used by Ask Bob from source.
 
 **Note**: Christoph Gohlke maintains unofficial Windows binaries for Python extension packages, including for [PyAudio](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio), which may be installed using `pip install INSERT_BINARY_LOCATION`.
 
@@ -27,10 +40,23 @@ You may have to modify the configuration depending on the voices available on yo
 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0
 ```
 
+Once you have `portaudio` installed, you may proceed by installing Ask Bob's voice-related dependencies with the following command:
+```bash
+$ python -m pip install -r requirements/voice.txt
+```
+
+**Note**: if you get an `ImportError` related to `_portaudio`, then you may have to additionally run the following commands (assuming you have `git` installed):
+```bash
+$ git clone https://people.csail.mit.edu/hubert/git/pyaudio.git
+$ cd pyaudio
+$ sudo python setup.py install
+```
+
 ## Usage
+
 Ask Bob may be run with the following command:
 ```bash
-python -m askbob -c config.ini
+$ python -m askbob -c config.ini
 ```
 
 Further help is available using the `--help` flag.
