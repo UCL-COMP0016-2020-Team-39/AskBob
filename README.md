@@ -20,7 +20,7 @@ $ docker build --build-arg ASKBOB_SETUP_CONFIG=default_config.json -t askbob .
 
 The Ask Bob server can then be launched using the following command:
 ```bash
-$ docker run -it -p 8000:8000 askbob
+$ docker run -it --rm -p 8000:8000 askbob
 ```
 
 ## Manually (for interactive and server modes of use)
