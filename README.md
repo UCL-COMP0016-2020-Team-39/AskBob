@@ -1,8 +1,31 @@
 # AskBob
 The AskBob voice assistant.
 
-## Installation
-You will need to find a [mozilla\DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.2)-compatible model and scorer to be used with AskBob. Once downloaded, it is suggested that the files be placed in the `data` folder and the configuration file `config.ini` be updated with the correct file names.
+## Docker (for use as a server only)
+
+If you are only using Ask Bob as a server (headlessly), then you can do this using Docker with the `Dockerfile` provided.
+### Installation
+
+Build the container using the following command:
+```bash
+$ docker build -t askbob .
+```
+
+You can specify a config.json file in the same directory as this README.md file to train off using a docker build argument as in the following command:
+```bash
+$ docker build --build-arg ASKBOB_SETUP_CONFIG=default_config.json -t askbob .
+```
+
+### Usage
+
+The Ask Bob server can then be launched using the following command:
+```bash
+$ docker run -it -p 8000:8000 askbob
+```
+
+## Manually (for interactive and server modes of use)
+
+### Installation
 
 First, ensure you have Python 3.7+ and `pip` installed on your system. Pip may be installed using the following command:
 ```bash
@@ -33,14 +56,7 @@ On Windows, you may have to compile the `portaudio` binary used by Ask Bob from 
 
 **Note**: Christoph Gohlke maintains unofficial Windows binaries for Python extension packages, including for [PyAudio](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio), which may be installed using `pip install INSERT_BINARY_LOCATION`.
 
-You may have to modify the configuration depending on the voices available on your system, which may be found using the following sequence of Python commands:
-```python
->>> import pyttsx3
->>> print(*[voice.id for voice in pyttsx3.init().getProperty('voices')])
-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0
-```
-
-Once you have `portaudio` installed, you may proceed by installing Ask Bob's voice-related dependencies with the following command:
+With all these requirements satisfied, you may proceed by installing Ask Bob's voice-related dependencies with the following command:
 ```bash
 $ python -m pip install -r requirements/voice.txt
 ```
@@ -50,6 +66,15 @@ $ python -m pip install -r requirements/voice.txt
 $ git clone https://people.csail.mit.edu/hubert/git/pyaudio.git
 $ cd pyaudio
 $ sudo python setup.py install
+```
+
+With `portaudio` properly installed, you will then need to find a [mozilla\DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.2)-compatible model and scorer to be used with AskBob. Once downloaded, place the files in the `data` folder and update the runtime configuration file (`config.ini`) with the correct file names.
+
+You may also have to modify the configuration depending on the voices available on your system, which may be found using the following sequence of Python commands:
+```python
+>>> import pyttsx3
+>>> print(*[voice.id for voice in pyttsx3.init().getProperty('voices')])
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0
 ```
 
 ## Usage
