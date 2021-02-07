@@ -6,7 +6,7 @@ def serve(responder: ResponseService, config: dict):
     from sanic import Sanic
     from sanic.response import text, json
 
-    app = Sanic("Ask Bob")
+    app = Sanic("Ask Bob", configure_logging=False)
 
     @app.route("/")
     async def hello(request):
