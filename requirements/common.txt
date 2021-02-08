@@ -1,4 +1,4 @@
+spacy~=2.3.5
 rasa[spacy]~=2.2.9
-spacy
 sanic
 coloredlogs

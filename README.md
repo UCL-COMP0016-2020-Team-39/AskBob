@@ -23,11 +23,11 @@ The Ask Bob server can then be launched using the following command:
 $ docker run -it --rm -p 8000:8000 askbob
 ```
 
-## Manually (for interactive and server modes of use)
+## Local use (for interactive and server modes of use)
 
 ### Installation
 
-First, ensure you have Python 3.7+ and `pip` installed on your system. Pip may be installed using the following command:
+First, ensure you have Python 3.7 and `pip` installed on your system. Pip may be installed using the following command:
 ```bash
 $ curl https://bootstrap.pypa.io/get-pip.py | sudo python3.7
 ```
