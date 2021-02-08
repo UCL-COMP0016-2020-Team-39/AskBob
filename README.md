@@ -79,9 +79,19 @@ HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11
 
 ### Usage
 
-Ask Bob may be run with the following command:
+Ask Bob may be run interactively with the following command:
+```bash
+$ python -m askbob
+```
+
+You can specify your own runtime config.ini file with the -c flag:
 ```bash
 $ python -m askbob -c config.ini
+```
+
+AskBob can also be run as a server with the following command:
+```bash
+$ python -m askbob -s
 ```
 
 Further help is available using the `--help` flag.
