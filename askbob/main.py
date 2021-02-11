@@ -5,7 +5,7 @@ from askbob.action.responder import RasaResponseService
 
 
 def make_transcriber(config, device, rate, file, savepath):
-    from askbob.audio.transcriber import Transcriber
+    from askbob.speech.transcriber import Transcriber
 
     if 'Listener' not in config:
         raise RuntimeError("No listener configuration provided.")
@@ -25,13 +25,13 @@ def make_transcriber(config, device, rate, file, savepath):
 
 
 async def interactive_loop(args, config, responder):
-    from askbob.audio.speaker import SpeechService
-    from askbob.audio.transcriber import TranscriptionEvent
+    from askbob.speech.synthesiser import TextToSpeechService
+    from askbob.speech.transcriber import TranscriptionEvent
     import halo
 
     transcriber = make_transcriber(
         config, args.device, args.rate, args.file, args.savepath)
-    speaker = SpeechService(config['Speaker']['voice_id'])
+    speaker = TextToSpeechService(config['Speaker']['voice_id'])
     spinner = halo.Halo(spinner='line')
 
     print("Listening (press Ctrl-C to exit).")

@@ -2,8 +2,8 @@ import logging
 import pyttsx3
 
 
-class SpeechService:
-    """The SpeechService is responsible for speech synthesis.
+class TextToSpeechService:
+    """The TextToSpeechService is responsible for speech synthesis.
     """
 
     tts: pyttsx3.Engine

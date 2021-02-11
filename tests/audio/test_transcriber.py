@@ -1,4 +1,4 @@
-from askbob.audio.transcriber import Transcriber, TranscriptionEvent
+from askbob.speech.transcriber import Transcriber, TranscriptionEvent
 
 
 def make_transcriber():

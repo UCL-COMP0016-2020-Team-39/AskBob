@@ -5,7 +5,7 @@ import logging
 import numpy as np
 import os
 
-from askbob.audio.listener import UtteranceService
+from askbob.speech.listener import UtteranceService
 
 
 class TranscriptionEvent(enum.Enum):
