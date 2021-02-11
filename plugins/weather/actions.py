@@ -27,7 +27,7 @@ class ActionFetchWeather(Action):
         }).json()
 
         try:
-            dispatcher.utter_message(text="It's {0} degrees with {1} in {2}.".format(
+            dispatcher.utter_message(text="It's {0} degrees Celsius with {1} in {2}.".format(
                 r['main']['temp'], r['weather'][0]['description'], r['name']))
         except:
             dispatcher.utter_message(
