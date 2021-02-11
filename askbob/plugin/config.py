@@ -14,7 +14,7 @@ class ModelGenerator:
             return '{}_{}'.format(intent, plugin)
 
     def get_action(self, action: str, plugin: str):
-        if action.startswith('utter_'):
+        if action.startswith('utter_') or action.startswith('validate_'):
             return '{}_{}'.format(action, plugin)
         else:
             return 'action_{}_{}'.format(action, plugin)
