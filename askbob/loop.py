@@ -1,11 +1,12 @@
 import os
 import logging
 
-from askbob.action.responder import RasaResponseService
+from askbob.action.responder import ResponseService
+from askbob.speech.transcriber import Transcriber
 
 
-def make_transcriber(config, device, rate, file, savepath):
-    from askbob.speech.transcriber import Transcriber
+def make_transcriber(config: dict, device: int, rate: int, file: str, savepath: str) -> Transcriber:
+    """Makes a new transcriber instance from the parameters provided."""
 
     if 'Listener' not in config:
         raise RuntimeError("No listener configuration provided.")
@@ -24,7 +25,15 @@ def make_transcriber(config, device, rate, file, savepath):
         'aggressiveness', fallback=1), device_index=device, rate=rate, filename=file, save_path=savepath)
 
 
-async def interactive_loop(args, config, responder):
+async def interactive_loop(args, config, responder: ResponseService):
+    """The main interactive loop for Ask Bob.
+
+    Args:
+        args: CLI-provided arguments
+        config: config.ini runtime configuration provided parameters
+        responder (ResponseService): The response service handling queries
+    """
+
     from askbob.speech.synthesiser import TextToSpeechService
     from askbob.speech.transcriber import TranscriptionEvent
     import halo
@@ -50,14 +59,3 @@ async def interactive_loop(args, config, responder):
 
         else:
             logging.error("Unknown transcription event: " + state)
-
-
-def main(args, config):
-    responder = RasaResponseService(config['Rasa']['model'])
-
-    if args.serve:
-        from .server import serve
-        serve(responder, config)
-    else:
-        import asyncio
-        asyncio.run(interactive_loop(args, config, responder))

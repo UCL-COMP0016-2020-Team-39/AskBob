@@ -1,6 +1,13 @@
 
 
-def setup(args, main_config):
+def setup(args: dict, main_config: dict):
+    """Handles the CLI --setup flag by training Ask Bob and hence generating a Rasa model.
+
+    Args:
+        args (dict): The command-line arguments provided
+        main_config (dict): The main config.ini runtime configuration file.
+    """
+
     import logging
     import json
     import os

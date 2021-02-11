@@ -15,7 +15,7 @@ class ResponseService:
             "The response service has not been implemented.")
 
 
-def yielder(m) -> Dict[Text, Any]:
+def yielder(m: Dict[Text, Any]) -> Dict[Text, Any]:
     if "text" in m:
         return {"text": m["text"]}
     elif "image" in m:
