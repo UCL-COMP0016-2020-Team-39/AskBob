@@ -43,13 +43,21 @@ def serve(responder: ResponseService, config: dict):
 
     @app.route("/skills")
     async def skills(request):
+        def get_intent_examples(plugin_config, intent_id):
+            for intent in plugin_config['intents']:
+                if intent['intent_id'] == intent_id:
+                    return intent['examples']
+
+            return []
+
         return json({
             plugin_config['plugin']: [
                 {
-                    'description': skill['description']
+                    'description': skill['description'],
+                    'examples': get_intent_examples(plugin_config, skill['intent'])
                 }
                 for skill in plugin_config['skills']
-                if 'description' in skill
+                if 'description' in skill and skill['intent'] != 'nlu_fallback'
             ]
             for plugin_config in plugin_configs
         })
