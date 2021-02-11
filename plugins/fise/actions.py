@@ -11,7 +11,7 @@ class ActionChangeBackground(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        dispatcher.utter_custom_json({
+        dispatcher.utter_message(json_message={
             "type": "change_background"
         })
 
@@ -31,7 +31,7 @@ class ActionCallUser(Action):
             return []
 
         dispatcher.utter_message(f"Calling {callee}.")
-        dispatcher.utter_custom_json({
+        dispatcher.utter_message(json_message={
             "type": "call_user",
             "callee": callee
         })
