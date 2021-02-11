@@ -4,6 +4,7 @@ The AskBob voice assistant.
 ## Docker (for use as a server only)
 
 If you are only using Ask Bob as a server (headlessly), then you can do this using Docker with the `Dockerfile` provided.
+
 ### Installation
 
 Build the container using the following command:
@@ -75,6 +76,21 @@ You may also have to modify the configuration depending on the voices available 
 >>> import pyttsx3
 >>> print(*[voice.id for voice in pyttsx3.init().getProperty('voices')])
 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0
+```
+
+### Training
+
+The Ask Bob voice assistant must be trained before use (this is done automatically when building the Docker container). This may be done using the following command:
+
+```bash
+$ python -m askbob --setup [optional additional configuration JSON file]
+```
+
+Ask Bob will train off installed plugins only if no additional configuration JSON file is provided.
+
+The following command is an example of how Ask Bob could be trained:
+```bash
+$ python -m askbob --setup default_config.json
 ```
 
 ### Usage
