@@ -4,6 +4,13 @@ import json as Json
 
 
 def serve(responder: ResponseService, config: dict):
+    """Services responses to Ask Bob queries and provides information about loaded skills via RESTful endpoints.
+
+    Args:
+        responder (ResponseService): The response service handling queries
+        config (dict): The runtime configuration (usually from config.ini)
+    """
+
     from sanic import Sanic
     from sanic.response import text, json
 
