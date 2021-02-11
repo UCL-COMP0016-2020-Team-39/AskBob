@@ -24,6 +24,8 @@ class ModelGenerator:
             f.write("""language: en
 pipeline:
   - name: SpacyNLP
+    model: "en_core_web_md"
+    case_sensitive: False
   - name: SpacyTokenizer
   - name: SpacyFeaturizer
   - name: RegexFeaturizer
