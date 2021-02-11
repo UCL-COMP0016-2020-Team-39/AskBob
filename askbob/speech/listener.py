@@ -1,5 +1,6 @@
 import collections
 import logging
+from typing import Optional, Text
 import numpy as np
 import pyaudio
 import queue
@@ -10,18 +11,28 @@ import webrtcvad
 
 
 class UtteranceService:
+    """The UtteranceService is responsible for recording complete utterances for the speech transcriber."""
 
     format = pyaudio.paInt16
-    channels = 1
-    sample_rate = 16000
-    blocks_per_second = 50
+    channels: int = 1
+    sample_rate: int = 16000
+    blocks_per_second: int = 50
 
-    block_size = sample_rate // blocks_per_second
+    block_size: int = sample_rate // blocks_per_second
 
-    frame_duration_ms = property(
+    frame_duration_ms: int = property(
         lambda self: 1000 * self.block_size // self.sample_rate)
 
-    def __init__(self, aggressiveness=1, device_index=None, input_rate=None, filename=None, lowpass_frequency=65, highpass_frequency=4000):
+    buffer_queue: queue.Queue
+    device_index: int
+    input_rate: int
+    block_size_input: int
+    pa: pyaudio.PyAudio
+    stream: pyaudio.Stream
+    vad: webrtcvad.Vad
+
+    def __init__(self, aggressiveness: int = 1, device_index: int = None, input_rate: int = 16000,
+                 filename: Optional[str] = None, lowpass_frequency: int = 65, highpass_frequency: int = 4000):
         self.buffer_queue = queue.Queue()
         self.device_index = device_index
         self.input_rate = input_rate
@@ -32,7 +43,13 @@ class UtteranceService:
 
         self._init_filter(lowpass_frequency, highpass_frequency)
 
-    def _create_stream(self, filename):
+    def _create_stream(self, filename: Optional[str] = None):
+        """Creates a new audio stream.
+
+        Args:
+            filename (str): The filename to store complete utterances at.
+        """
+
         def callback(in_data, frame_count, time_info, status):
             if self.chunk is not None:
                 in_data = self.wf.readframes(self.chunk)
@@ -61,16 +78,25 @@ class UtteranceService:
         return stream
 
     def _end_stream(self, stream):
+        """Terminates a given stream.
+
+        Args:
+            stream (Stream): The stream to terminate
+        """
+
         stream.stop_stream()
         stream.close()
 
     def _destroy(self):
+        """Destroys the stream and terminates recording with PyAudio."""
+
         self._end_stream(self.stream)
         self.pa.terminate()
 
     def _resample(self, data):
-        """
-        The user's microphone may not support the native processing sampling rate, so audio data will have to be resampled from input_rate to sample_rate for deepspeech and webrtcvad.
+        """Resamples audio frames to the sample rate needed for DeepSpeech and webrtcvad (16000Hz).
+
+        The user's microphone may not support the native processing sampling rate of 16000Hz, so audio data will have to be resampled from a sample rate supported by their recording device (input_rate) to sample_rate.
         """
         data16 = np.frombuffer(data, dtype=np.int16)
         resample_size = int(len(data16) * self.sample_rate / self.input_rate)
@@ -78,7 +104,14 @@ class UtteranceService:
         resample16 = np.array(resample, dtype=np.int16)
         return resample16.tobytes()
 
-    def write_wav(self, filename, data):
+    def write_wav(self, filename: str, data):
+        """Writes audio frames to a .wav file.
+
+        Args:
+            filename (str): The filename of the .wav file to be written
+            data: The audio frames
+        """
+
         logging.info("Writing wav file: %s", filename)
         wf = wave.open(filename, 'wb')
         wf.setnchannels(self.channels)
@@ -87,7 +120,14 @@ class UtteranceService:
         wf.writeframes(data)
         wf.close()
 
-    def _init_filter(self, lowpass_frequency, highpass_frequency):
+    def _init_filter(self, lowpass_frequency: int, highpass_frequency: int):
+        """Initialises the bandpass filter.
+
+        Args:
+            lowpass_frequency (int): The lowpass filter cutoff frequency
+            highpass_frequency (int): The highpass filter cutoff frequency
+        """
+
         nyquist_frequency = 0.5 * self.sample_rate
         self.b, self.a = scipy.signal.filter_design.butter(4, [
             lowpass_frequency / nyquist_frequency,
@@ -96,6 +136,8 @@ class UtteranceService:
         self.zi = scipy.signal.signaltools.lfilter_zi(self.b, self.a)
 
     def _filter(self, data):
+        """Applies a bandpass filter to the audio signal."""
+
         data16 = np.frombuffer(data, dtype=np.int16)
 
         filtered, self.zi = scipy.signal.signaltools.lfilter(
@@ -104,7 +146,7 @@ class UtteranceService:
         return np.array(filtered, dtype=np.int16).tobytes()
 
     def _frames(self):
-        """Generator that yields all audio frames from microphone, blocking if necessary."""
+        """Yields all audio frames from the microphone, blocking if necessary."""
         if self.input_rate == self.sample_rate:
             while True:
                 yield self._filter(self.buffer_queue.get())
@@ -113,7 +155,9 @@ class UtteranceService:
                 yield self._filter(self._resample(self.buffer_queue.get()))
 
     def utterances(self, padding_ms=300, ratio=0.75):
-        """This is a generator that yields series of consecutive audio frames for each utterence, separated by a single None. It determines the level of voice activity using the ratio of frames in padding_ms. It uses a buffer to include padding_ms prior to being triggered.
+        """This is a generator that yields series of consecutive audio frames for each utterence, separated by a single None.
+
+        It determines the level of voice activity using the ratio of frames in padding_ms. It uses a buffer to include padding_ms prior to being triggered.
 
             Example: (frame, ..., frame, None, frame, ..., frame, None, ...)
                       |---utterence---|        |---utterence---|

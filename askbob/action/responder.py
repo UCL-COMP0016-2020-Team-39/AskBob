@@ -5,6 +5,7 @@ import requests
 
 
 class ResponseService:
+    """An interface for a response service, which produces responses for text queries."""
 
     def is_ready(self) -> bool:
         return True
