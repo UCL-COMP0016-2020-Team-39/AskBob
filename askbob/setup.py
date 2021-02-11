@@ -23,6 +23,10 @@ def setup(args, main_config):
         config['plugin'] = 'main'
         configs.append(config)
 
+    if 'summary' in main_config['Plugins']:
+        with open(main_config['Plugins']['summary'], 'w') as f:
+            json.dump(configs, f)
+
     mg = ModelGenerator()
     mg.generate(configs, main_config['Rasa']['config'],
                 main_config['Rasa']['model'])
