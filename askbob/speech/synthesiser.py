@@ -22,7 +22,7 @@ class TextToSpeechService:
         """Converts the text into speech and outputs the audio.
 
         Args:
-            text (str): The text to say
+            text (str): The text to say.
         """
 
         self.tts.say(text)

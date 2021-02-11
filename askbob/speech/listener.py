@@ -81,7 +81,7 @@ class UtteranceService:
         """Terminates a given stream.
 
         Args:
-            stream (Stream): The stream to terminate
+            stream (Stream): The stream to terminate.
         """
 
         stream.stop_stream()
@@ -108,8 +108,8 @@ class UtteranceService:
         """Writes audio frames to a .wav file.
 
         Args:
-            filename (str): The filename of the .wav file to be written
-            data: The audio frames
+            filename (str): The filename of the .wav file to be written.
+            data: The audio frames.
         """
 
         logging.info("Writing wav file: %s", filename)
@@ -124,8 +124,8 @@ class UtteranceService:
         """Initialises the bandpass filter.
 
         Args:
-            lowpass_frequency (int): The lowpass filter cutoff frequency
-            highpass_frequency (int): The highpass filter cutoff frequency
+            lowpass_frequency (int): The lowpass filter cutoff frequency.
+            highpass_frequency (int): The highpass filter cutoff frequency.
         """
 
         nyquist_frequency = 0.5 * self.sample_rate

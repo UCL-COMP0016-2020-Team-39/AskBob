@@ -9,11 +9,13 @@ from askbob.speech.listener import UtteranceService
 
 
 class TranscriptionEvent(enum.Enum):
+    """An enum representing utterance-related events."""
     START_UTTERANCE = 1
     END_UTTERANCE = 2
 
 
 class Transcriber:
+    """The transcriber performs speech-to-text on captured utterances spoken by the user."""
 
     def __init__(self, model: str, scorer: str, aggressiveness: int,
                  device_index: int, rate: int, filename: str, save_path: str):
@@ -25,10 +27,19 @@ class Transcriber:
                                    device_index=device_index,
                                    input_rate=rate,
                                    filename=filename)
-
         self.save_path = save_path
 
-    def init_deepspeech(self, model_path, scorer_path=""):
+    def init_deepspeech(self, model_path: str, scorer_path: str = "") -> deepspeech.Model:
+        """Initialises the DeepSpeech model.
+
+        Args:
+            model_path (str): The path to the DeepSpech model.
+            scorer_path (str, optional): The path to an external scorer. Defaults to "".
+
+        Returns:
+            deepspeech.Model: The DeepSpeech model.
+        """
+
         logging.info("Initialising DeepSpeech model: %s", scorer_path)
 
         if os.path.isdir(model_path):
@@ -43,6 +54,13 @@ class Transcriber:
         return model
 
     def transcribe(self):
+        """Transcribes spoken words.
+
+        Yields:
+            TranscriptionEvent: Whether the utterance has started or ended.
+            str: The transcribed phrase spoken by the user.
+        """
+
         if self.save_path:
             os.makedirs(self.save_path, exist_ok=True)
 
