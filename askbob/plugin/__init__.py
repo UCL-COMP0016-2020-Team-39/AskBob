@@ -1,7 +1,7 @@
 from typing import Text
 
 
-def action(plugin, name):
+def action(plugin: str, name: str):
     def wrapper(action):
         def name_method(self) -> Text:
             return "action_{}_{}".format(name, plugin)

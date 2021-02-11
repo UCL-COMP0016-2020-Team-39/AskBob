@@ -1,3 +1,4 @@
+from typing import Any, Dict, Text
 from rasa.utils.endpoints import EndpointConfig
 from rasa.core.agent import Agent
 import requests
@@ -13,7 +14,7 @@ class ResponseService:
             "The response service has not been implemented.")
 
 
-def yielder(m):
+def yielder(m) -> Dict[Text, Any]:
     if "text" in m:
         return {"text": m["text"]}
     elif "image" in m:
@@ -55,7 +56,9 @@ class RasaResponseService(ResponseService):
 
 class HTTPResponseService(ResponseService):
 
-    def __init__(self, endpoint_base):
+    endpoint: str
+
+    def __init__(self, endpoint_base) -> None:
         self.endpoint = endpoint_base + "/webhooks/rest/webhook"
 
     async def handle(self, query, sender="askbob"):

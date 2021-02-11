@@ -1,4 +1,8 @@
-def setup_logging():
+import argparse
+
+
+def setup_logging() -> None:
+    """Initialises logging for Ask Bob."""
     import logging
     import coloredlogs
     import os
@@ -16,9 +20,12 @@ def setup_logging():
     )
 
 
-def make_argument_parser():
-    import argparse
+def make_argument_parser() -> argparse.ArgumentParser:
+    """Initialises the CLI argument parser.
 
+    Returns:
+        argparse.ArgumentParser: the CLI argument parser
+    """
     parser = argparse.ArgumentParser(
         description="Ask Bob: a customisable voice assistant.")
 
