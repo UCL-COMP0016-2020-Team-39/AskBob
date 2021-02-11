@@ -1,10 +1,14 @@
 from askbob.action.responder import ResponseService
 import logging
+import json as Json
 
 
 def serve(responder: ResponseService, config: dict):
     from sanic import Sanic
     from sanic.response import text, json
+
+    plugin_configs = Json.load(open(config['Plugins']['Summary'],
+                                    'r')) if 'summary' in config['Plugins'] else []
 
     app = Sanic("Ask Bob", configure_logging=False)
 
@@ -35,6 +39,19 @@ def serve(responder: ResponseService, config: dict):
         return json({
             "messages": [
                 response async for response in responder.handle(message, sender)]
+        })
+
+    @app.route("/skills")
+    async def skills(request):
+        return json({
+            plugin_config['plugin']: [
+                {
+                    'description': skill['description']
+                }
+                for skill in plugin_config['skills']
+                if 'description' in skill
+            ]
+            for plugin_config in plugin_configs
         })
 
     logging.info("Running Ask Bob HTTP server.")
