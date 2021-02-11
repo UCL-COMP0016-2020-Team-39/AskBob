@@ -44,8 +44,9 @@ async def interactive_loop(args, config, responder):
             if text:
                 print("==", text)
                 async for response in responder.handle(text):
-                    print("=>", response)
-                    speaker.say(response)
+                    if "text" in response:
+                        print("=>", response["text"])
+                        speaker.say(response["text"])
 
         else:
             logging.error("Unknown transcription event: " + state)
