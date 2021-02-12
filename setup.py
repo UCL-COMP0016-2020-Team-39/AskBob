@@ -6,7 +6,7 @@ with open(path.join(path.abspath(path.dirname(__file__)), 'README.md'), encoding
     long_description = f.read()
 
 setup(name='askbob',
-      version='0.0.1',
+      version='0.0.2',
       description='A customisable, federated, privacy-safe voice assistant deployable on low-power devices.',
       long_description=long_description,
       long_description_content_type='text/markdown',
