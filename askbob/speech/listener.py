@@ -41,6 +41,18 @@ class UtteranceService:
         self.stream = self._create_stream(filename)
         self.vad = webrtcvad.Vad(aggressiveness)
 
+        logging.info("Found input sound devices: " + '; '.join([
+            f"({i}) {self.pa.get_device_info_by_host_api_device_index(0, i).get('name')}"
+            for i in range(0, self.pa.get_host_api_info_by_index(0)['deviceCount'])
+            if self.pa.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels') > 0
+        ]))
+
+        if device_index:
+            logging.info(f"Using input sound device index: {device_index}")
+        else:
+            logging.info(
+                f"Using default input sound device index: {self.pa.get_host_api_info_by_index(0)['defaultInputDevice']}")
+
         self._init_filter(lowpass_frequency, highpass_frequency)
 
     def _create_stream(self, filename: Optional[str] = None):

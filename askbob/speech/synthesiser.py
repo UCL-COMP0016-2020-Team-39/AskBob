@@ -3,8 +3,7 @@ import pyttsx3
 
 
 class TextToSpeechService:
-    """The TextToSpeechService is responsible for speech synthesis.
-    """
+    """The TextToSpeechService is responsible for speech synthesis."""
 
     tts: pyttsx3.Engine
 
