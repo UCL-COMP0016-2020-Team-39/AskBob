@@ -9,10 +9,12 @@ def make_transcriber(config: dict, device: int, rate: int, file: str, savepath: 
     """Makes a new transcriber instance from the parameters provided."""
 
     if 'Listener' not in config:
-        raise RuntimeError("No listener configuration provided.")
+        raise RuntimeError(
+            "Missing Listener section in the runtime configuration file.")
 
     if 'model' not in config['Listener']:
-        raise RuntimeError("No listener model provided.")
+        raise RuntimeError(
+            "Missing Listener.model in the runtime configuration file.")
 
     model_path = config['Listener']['model']
     scorer_path = config['Listener']['scorer'] if 'scorer' in config['Listener'] else ''
@@ -34,13 +36,23 @@ async def interactive_loop(args, config, responder: ResponseService):
         responder (ResponseService): The response service handling queries
     """
 
+    if 'TTS' not in config or 'voice_id' not in config['TTS']:
+        logging.error(
+            "Missing voice_id in the runtime configuration ini file.")
+        return
+
     from askbob.speech.synthesiser import TextToSpeechService
     from askbob.speech.transcriber import TranscriptionEvent
     import halo
 
-    transcriber = make_transcriber(
-        config, args.device, args.rate, args.file, args.savepath)
-    speaker = TextToSpeechService(config['Speaker']['voice_id'])
+    try:
+        transcriber = make_transcriber(
+            config, args.device, args.rate, args.file, args.savepath)
+    except Exception as e:
+        logging.error(f"Unable to make the transcriber: {e}")
+        return
+
+    speaker = TextToSpeechService(config['TTS']['voice_id'])
     spinner = halo.Halo(spinner='line')
 
     print("Listening (press Ctrl-C to exit).")
