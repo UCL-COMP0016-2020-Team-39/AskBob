@@ -160,7 +160,7 @@ class UtteranceService:
         It determines the level of voice activity using the ratio of frames in padding_ms. It uses a buffer to include padding_ms prior to being triggered.
 
             Example: (frame, ..., frame, None, frame, ..., frame, None, ...)
-                      |---utterence---|        |---utterence---|
+                      |   utterence   |        |   utterence   |
         """
 
         triggered = False
