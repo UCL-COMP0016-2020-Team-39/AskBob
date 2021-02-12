@@ -70,6 +70,6 @@ def serve(responder: ResponseService, config: dict):
         })
 
     logging.info("Running Ask Bob HTTP server.")
-    app.run(host=config['Server']['host'],
-            port=int(config['Server']['port']),
+    app.run(host=config['Server'].get('host', '0.0.0.0'),
+            port=config['Server'].getint('port', fallback=8000),
             access_log=False)

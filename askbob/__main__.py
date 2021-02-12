@@ -29,7 +29,11 @@ def main():
 
         # Run the voice assistant
         from askbob.action.responder import RasaResponseService
-        responder = RasaResponseService(config['Rasa']['model'])
+        responder = RasaResponseService(
+            config['Rasa']['model'],
+            config['Plugins'].get('location', 'plugins'),
+            config['Plugins'].getint('action_server_port', fallback=5055)
+        ) if 'Plugins' in config else RasaResponseService(config['Rasa']['model'])
 
         if args.serve:
             # Run Ask Bob in server mode

@@ -56,7 +56,7 @@ class RasaResponseService(ResponseService):
 
     agent: Agent
 
-    def __init__(self, model_dir: str = "data/rasa/models") -> None:
+    def __init__(self, model_dir: str = "data/rasa/models", plugins_location="plugins", plugins_port=5055) -> None:
         """Initialises the RasaResponseService.
 
         The Rasa actions server required for custom actions to function is automatically started when this class is initialised.
@@ -69,7 +69,7 @@ class RasaResponseService(ResponseService):
         import sys
         import subprocess
         self.action_server = subprocess.Popen(
-            [sys.executable, "-m", "askbob.action.server"])
+            [sys.executable, "-m", "askbob.action.server", plugins_location, str(plugins_port)])
 
         # Main Rasa Model
         from rasa.model import get_latest_model

@@ -136,6 +136,63 @@ optional arguments:
                         provided and those from installed plugins.
 ```
 
+## Runtime Configuration Options
+
+### Listener
+```ini
+[Listener]
+model = data/deepspeech-0.9.1-models.pbmm
+scorer = data/deepspeech-0.9.1-models.scorer
+aggressiveness = 1
+```
+
+- `model` is the location to the DeepSpeech model
+- `scorer` is the optional location to an external DeepSpeech scorer
+- `aggressiveness` is an optional integer (1 if unspecified) between 0 and 3 (inclusive) determining how aggressive the voice activity detector is at filtering out non-speech (0 is the least aggressive, 3 is the most aggressive).
+
+### TTS
+```ini
+[TTS]
+voice_id = HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0
+```
+- `voice_id` is the ID of the voice to be used by the pyttsx3 text-to-speech library. If this voice cannot be found, the default voice is used. You may need to install voices in a manner consistent with your operating system before this may work.
+
+### Rasa
+```ini
+[Rasa]
+config = data/rasa/config
+model = data/rasa/models
+```
+
+- `config` is the location where Ask Bob will generate a set of Rasa YAML config files
+- `model` is the location where Ask Bob will place trained Rasa models
+
+It is highly recommended that you do not change either of these values.
+
+### Server
+```ini
+[Server]
+host = 0.0.0.0
+port = 8000
+```
+
+- `host` is the host Ask Bob will bind to when being run in server mode (0.0.0.0 if unspecified)
+- `post` is the post Ask Bob will bind to when being run in server mode (8000 if unspecified)
+
+### Plugins
+```ini
+[Plugins]
+location = plugins
+action_server_port = 5055
+summary = data/summary.json
+```
+
+- `plugins` is the location of the plugins folder (this cannot contain any spaces and must be a valid python module name)
+- `action_server_port` is the port used by the internal Rasa custom action server (5055 if unspecified)
+- `summary` is the location at which a summary of installed voice assistant skills is stored at build-time
+
+It is highly recommended that you do not change any of these values.
+
 ## Tests
 
 Tests may be run with the following command:
