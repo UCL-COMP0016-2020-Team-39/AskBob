@@ -1,5 +1,5 @@
 numpy~=1.17.0
 spacy~=2.2.4
 rasa[spacy]~=2.2.9
-sanic
-coloredlogs
+sanic~=20.9.0
+coloredlogs~=10.0
