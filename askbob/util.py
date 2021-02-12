@@ -7,7 +7,7 @@ def setup_logging() -> None:
     import coloredlogs
     import os
 
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
     logger = logging.getLogger()
     if logger.hasHandlers():
