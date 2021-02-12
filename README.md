@@ -1,5 +1,5 @@
 # AskBob
-The AskBob voice assistant.
+AskBob is an easily customisable, completely federated voice assistant deployable on low-power devices.
 
 ## Docker (for use as a server only)
 

@@ -1,9 +1,15 @@
 from setuptools import setup, find_packages
+from os import path
+
+# README
+with open(path.join(path.abspath(path.dirname(__file__)), 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(name='askbob',
       version='0.0.1',
-      description='A customisable voice assistant.',
-      long_description='An easily customisable, completely federated voice assistant deployable on low-power devices.',
+      description='A customisable, federated, privacy-safe voice assistant deployable on low-power devices.',
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       url='https://github.com/UCL-COMP0016-2020-Team-39/AskBob',
       author='Jeremy Lo Ying Ping',
       author_email='jeremylo2001@googlemail.com',
