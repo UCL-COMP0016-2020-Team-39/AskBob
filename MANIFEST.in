@@ -1,3 +1,4 @@
+include .gitignore
 include config.ini
 include default_config.json
 include Dockerfile

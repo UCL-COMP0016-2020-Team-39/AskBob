@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='askbob',
-      version='0.1',
+      version='0.0.1',
       description='A customisable voice assistant.',
       long_description='An easily customisable, completely federated voice assistant deployable on low-power devices.',
       url='https://github.com/UCL-COMP0016-2020-Team-39/AskBob',
