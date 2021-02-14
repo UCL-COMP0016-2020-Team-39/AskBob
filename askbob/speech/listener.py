@@ -47,7 +47,7 @@ class UtteranceService:
             if self.pa.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels') > 0
         ]))
 
-        if device_index:
+        if device_index is not None:
             logging.info(f"Using input sound device index: {device_index}")
         else:
             logging.info(
