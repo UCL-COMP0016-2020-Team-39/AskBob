@@ -208,7 +208,7 @@ class UtteranceService:
                             yield f
                         ring_buffer.clear()
 
-        # except KeyboardInterrupt:
-        #    pass
+        except KeyboardInterrupt:
+            return
         finally:
             self._destroy()

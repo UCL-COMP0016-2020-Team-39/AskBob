@@ -63,30 +63,34 @@ class Transcriber:
         stream_context = self.model.createStream()
         wav_data = bytearray()
         last_event = None
-        for utterance in self.us.utterances():
-            if utterance is not None:
-                if last_event != TranscriptionEvent.START_UTTERANCE:
-                    logging.debug("Utterance started.")
-                    last_event = TranscriptionEvent.START_UTTERANCE
-                    yield last_event, None
+        try:
+            for utterance in self.us.utterances():
+                if utterance is not None:
+                    if last_event != TranscriptionEvent.START_UTTERANCE:
+                        logging.debug("Utterance started.")
+                        last_event = TranscriptionEvent.START_UTTERANCE
+                        yield last_event, None
 
-                stream_context.feedAudioContent(
-                    np.frombuffer(utterance, np.int16))
+                    stream_context.feedAudioContent(
+                        np.frombuffer(utterance, np.int16))
 
-                if self.save_path:
-                    wav_data.extend(utterance)
-            else:
-                logging.debug("Utterence ended.")
+                    if self.save_path:
+                        wav_data.extend(utterance)
+                else:
+                    logging.debug("Utterence ended.")
 
-                text = stream_context.finishStream()
-                if text and self.save_path:
-                    self.us.write_wav(os.path.join(self.save_path, datetime.datetime.now().strftime(
-                        "%Y-%m-%d_%H-%M-%S - " + text + ".wav")), wav_data)
+                    text = stream_context.finishStream()
+                    if text and self.save_path:
+                        self.us.write_wav(os.path.join(self.save_path, datetime.datetime.now().strftime(
+                            "%Y-%m-%d_%H-%M-%S - " + text + ".wav")), wav_data)
 
-                last_event = TranscriptionEvent.END_UTTERANCE
-                yield last_event, text
+                    last_event = TranscriptionEvent.END_UTTERANCE
+                    yield last_event, text
 
-                if self.save_path:
-                    wav_data = bytearray()
+                    if self.save_path:
+                        wav_data = bytearray()
 
-                stream_context = self.model.createStream()
+                    stream_context = self.model.createStream()
+        except KeyboardInterrupt:
+            yield TranscriptionEvent.END_UTTERANCE, ""
+            return
