@@ -79,7 +79,7 @@ class UtteranceService:
 
         self.chunk = None
         if self.device_index:  # non-default device_index selected
-            kwargs['input_device_index_index'] = self.device_index
+            kwargs['input_device_index'] = self.device_index
         elif filename is not None:
             self.chunk = 320
             self.wf = wave.open(filename, 'rb')
@@ -208,7 +208,7 @@ class UtteranceService:
                             yield f
                         ring_buffer.clear()
 
-        except KeyboardInterrupt:
-            pass
+        # except KeyboardInterrupt:
+        #    pass
         finally:
             self._destroy()

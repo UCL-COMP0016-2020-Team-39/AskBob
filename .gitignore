@@ -118,3 +118,4 @@ cython_debug/
 # Ask Bob
 data
 voice_samples
+cov_html

@@ -42,10 +42,6 @@ class Transcriber:
 
         logging.info("Initialising DeepSpeech model: %s", scorer_path)
 
-        if os.path.isdir(model_path):
-            model_path = os.path.join(model_path, 'output_graph.pb')
-            scorer_path = os.path.join(model_path, scorer_path)
-
         model = deepspeech.Model(model_path)
         if scorer_path:
             logging.info("Enabling the external scorer: %s", scorer_path)
@@ -83,10 +79,9 @@ class Transcriber:
                 logging.debug("Utterence ended.")
 
                 text = stream_context.finishStream()
-                if text:
-                    if self.save_path:
-                        self.us.write_wav(os.path.join(self.save_path, datetime.datetime.now().strftime(
-                            "%Y-%m-%d_%H-%M-%S - " + text + ".wav")), wav_data)
+                if text and self.save_path:
+                    self.us.write_wav(os.path.join(self.save_path, datetime.datetime.now().strftime(
+                        "%Y-%m-%d_%H-%M-%S - " + text + ".wav")), wav_data)
 
                 last_event = TranscriptionEvent.END_UTTERANCE
                 yield last_event, text

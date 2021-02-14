@@ -19,10 +19,6 @@ def make_transcriber(config: dict, device: int, rate: int, file: str, savepath: 
     model_path = config['Listener']['model']
     scorer_path = config['Listener']['scorer'] if 'scorer' in config['Listener'] else ''
 
-    if os.path.isdir(model_path):
-        model_path = os.path.join(model_path, 'output_graph.pb')
-        scorer_path = os.path.join(model_path, scorer_path)
-
     return Transcriber(model=model_path, scorer=scorer_path, aggressiveness=config['Listener'].getint(
         'aggressiveness', fallback=1), device_index=device, rate=rate, filename=file, save_path=savepath)
 

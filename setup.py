@@ -36,7 +36,8 @@ setup(name='askbob',
               "webrtcvad~=2.0.10"
           ],
           "test": [
-              "pytest~=6.2.1"
+              "pytest~=6.2.1",
+              "pytest-cov~=2.11.1"
           ]
       },
       include_package_data=True,
