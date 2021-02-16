@@ -1,5 +1,6 @@
 import os
 import shutil
+import logging
 
 
 class ModelGenerator:
@@ -29,6 +30,7 @@ pipeline:
   - name: SpacyTokenizer
   - name: SpacyFeaturizer
   - name: RegexFeaturizer
+    case_sensitive: False
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
   - name: CountVectorsFeaturizer
@@ -39,6 +41,11 @@ pipeline:
     epochs: 100
   - name: EntitySynonymMapper
   - name: SpacyEntityExtractor
+  - name: RegexEntityExtractor
+    case_sensitive: False
+    use_lookup_tables: True
+    use_regexes: True
+    "use_word_boundaries": True
   - name: ResponseSelector
     epochs: 100
   - name: FallbackClassifier
@@ -110,6 +117,9 @@ session_config:
         with open(os.path.join(location, plugin + '.yml'), 'w') as f:
             f.write('version: "2.0"\n')
 
+            if 'intents' not in config:
+                raise RuntimeError("Configurations must have intents.")
+
             # NLU
             f.write('\nnlu:\n')
             for intent in config['intents']:
@@ -121,6 +131,42 @@ session_config:
                 f.writelines(
                     ['      - ' + example + '\n' for example in intent['examples']])
                 f.write('\n')
+
+            if 'synonyms' in config:
+                for synonym in config['synonyms']:
+                    if 'synonym' not in synonym or 'examples' not in synonym:
+                        raise RuntimeError(
+                            "A synonym must have both a 'synonym' field and a list of examples under 'examples'.")
+
+                    f.write(
+                        '  - synonym: {}\n    examples: |\n'.format(synonym['synonym']))
+                    f.writelines(
+                        ['      - ' + example + '\n' for example in synonym['examples']])
+                    f.write('\n')
+
+            if 'regexes' in config:
+                for regex in config['regexes']:
+                    if 'regex_id' not in regex or 'examples' not in regex:
+                        raise RuntimeError(
+                            "A regex must have both a 'regex_id' field and a list of examples under 'examples'.")
+
+                    f.write('  - regex: {}\n    examples: |\n'.format(
+                        regex['regex_id']))
+                    f.writelines(
+                        ['      - ' + example + '\n' for example in regex['examples']])
+                    f.write('\n')
+
+            if 'lookups' in config:
+                for lookup in config['lookups']:
+                    if 'lookup_id' not in lookup or 'examples' not in lookup:
+                        raise RuntimeError(
+                            "A lookup must have both a 'lookup_id' field and a list of examples under 'examples'.")
+
+                    f.write('  - lookup: {}\n    examples: |\n'.format(
+                        lookup['lookup_id']))
+                    f.writelines(
+                        ['      - ' + example + '\n' for example in lookup['examples']])
+                    f.write('\n')
 
             # Rules
             if 'rules' in config or 'skills' in config:
@@ -176,10 +222,14 @@ session_config:
             shutil.rmtree(training_path)
         os.makedirs(training_path)
 
-        for config in configs:
-            plugin = config['plugin'] if 'plugin' in config else 'main'
-            self.generate_domain(config, domain_path, plugin)
-            self.generate_training_data(config, training_path, plugin)
+        try:
+            for config in configs:
+                plugin = config['plugin'] if 'plugin' in config else 'main'
+                self.generate_domain(config, domain_path, plugin)
+                self.generate_training_data(config, training_path, plugin)
+        except Exception as e:
+            logging.error(str(e))
+            return None
 
         from rasa import train
 
