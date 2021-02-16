@@ -5,6 +5,8 @@ import logging
 
 class ModelGenerator:
 
+    uses_stories: bool = False
+
     def __init__(self):
         pass
 
@@ -12,13 +14,13 @@ class ModelGenerator:
         if plugin == "main":
             return intent
         else:
-            return '{}_{}'.format(intent, plugin)
+            return f'{intent}_{plugin}'
 
     def get_action(self, action: str, plugin: str):
         if action.startswith('utter_') or action.startswith('validate_'):
-            return '{}_{}'.format(action, plugin)
+            return f'{action}_{plugin}'
         else:
-            return 'action_{}_{}'.format(action, plugin)
+            return f'action_{action}_{plugin}'
 
     def generate_config_yml(self, location: str):
         with open(location + '/config.yml', 'w') as f:
@@ -67,7 +69,7 @@ policies:
   url: "http://localhost:5002/api""")
 
     def generate_endpoints_yml(self, location):
-        with open(location + '/credentials.yml', 'w') as f:
+        with open(location + '/endpoints.yml', 'w') as f:
             f.write("""action_endpoint:
   url: "http://localhost:5055/webhook\"""")
 
@@ -86,7 +88,7 @@ policies:
 
             if 'entities' in config:
                 f.write('\nentities:\n')
-                f.writelines(['  - {}\n'.format(entity)
+                f.writelines([f'  - {entity}\n'
                               for entity in config['entities']])
                 f.write('\n')
 
@@ -174,8 +176,8 @@ session_config:
 
                 if 'skills' in config:
                     for skill in config['skills']:
-                        f.write('  - rule: {}\n    steps:\n      - intent: {}\n'.format(
-                            skill['description'] if 'description' in skill else '', self.get_intent(skill['intent'], plugin)))
+                        f.write("  - rule: {}\n    steps:\n      - intent: {}\n".format(
+                                skill.get('description', ''), self.get_intent(skill['intent'], plugin)))
                         f.writelines(['      - action: {}\n'.format(self.get_action(action, plugin))
                                       for action in skill['actions']])
                         f.write('\n')
@@ -183,21 +185,22 @@ session_config:
                 # Rules
                 if 'rules' in config:
                     for rule in config['rules']:
-                        f.write('  - rule: ' +
-                                (rule['description'] if 'description' in rule else '')+'\n    steps:\n')
-                        f.writelines(['      - ' + step['type'] + ': ' + step['value'] + '\n'
+                        f.write(
+                            f"  - rule: {rule.get('description', '')}\n    steps:\n")
+                        f.writelines([f"      - {step['type']}: {step['value']}\n"
                                       for step in rule['steps']])
                         f.write('\n')
 
             # Stories
-            """ if 'stories' in config:
+            if 'stories' in config:
+                self.uses_stories = True
                 f.write('\nstories:\n')
-                for rule in config['stories']:
-                    f.write('  - story: ' +
-                            (rule['description'] if 'description' in rule else '')+'\n    steps:\n')
+                for story in config['stories']:
+                    f.write(
+                        '  - story: {}\n    steps:\n'.format(story.get('description', '')))
                     f.writelines(['      - ' + step['type'] + ': ' + step['step_id'] + '\n'
                                   for step in rule['steps']])
-                    f.write('\n') """
+                    f.write('\n')
 
     def generate(self, configs, config_location, output_location):
         if os.path.exists(config_location):
