@@ -66,7 +66,7 @@ policies:
     def generate_credentials_yml(self, location):
         with open(location + '/credentials.yml', 'w') as f:
             f.write("""rasa:
-  url: "http://localhost:5002/api""")
+  url: "http://localhost:5002/api\"""")
 
     def generate_endpoints_yml(self, location):
         with open(location + '/endpoints.yml', 'w') as f:
@@ -102,6 +102,10 @@ policies:
             if 'responses' in config:
                 f.write('\nresponses:\n')
                 for response in config['responses']:
+                    if 'text' not in response:
+                        raise RuntimeError(
+                            "There is no 'text' field defined for a response.")
+
                     f.write('  {}: \n'.format(self.get_action(
                         response['response_id'], plugin)))
                     f.writelines(['    - text: "' + text +
@@ -199,7 +203,7 @@ session_config:
                     f.write(
                         '  - story: {}\n    steps:\n'.format(story.get('description', '')))
                     f.writelines(['      - ' + step['type'] + ': ' + step['step_id'] + '\n'
-                                  for step in rule['steps']])
+                                  for step in story['steps']])
                     f.write('\n')
 
     def generate(self, configs, config_location, output_location):
@@ -232,6 +236,7 @@ session_config:
                 self.generate_training_data(config, training_path, plugin)
         except Exception as e:
             logging.error(str(e))
+            #raise e
             return None
 
         from rasa import train

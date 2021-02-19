@@ -14,7 +14,7 @@ def serve(responder: ResponseService, config: dict):
     from sanic import Sanic
     from sanic.response import text, json
 
-    plugin_configs = Json.load(open(config['Plugins']['Summary'],
+    plugin_configs = Json.load(open(config['Plugins']['summary'],
                                     'r')) if 'summary' in config['Plugins'] else []
 
     app = Sanic("Ask Bob", configure_logging=False)
