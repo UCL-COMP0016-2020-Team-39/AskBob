@@ -30,10 +30,14 @@ def setup(args: dict, main_config: dict):
         config['plugin'] = 'main'
         configs.append(config)
 
-    if 'summary' in main_config['Plugins']:
+    mg = ModelGenerator()
+    model = mg.generate(configs, main_config['Rasa']['config'],
+                        main_config['Rasa']['model'])
+
+    # Only generator a summary if training is successful
+    if model and 'summary' in main_config['Plugins']:
+        os.makedirs(os.path.dirname(
+            main_config['Plugins']['summary']), exist_ok=True)
+
         with open(main_config['Plugins']['summary'], 'w') as f:
             json.dump(configs, f)
-
-    mg = ModelGenerator()
-    mg.generate(configs, main_config['Rasa']['config'],
-                main_config['Rasa']['model'])
