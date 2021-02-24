@@ -2,10 +2,11 @@ import os
 import logging
 
 from askbob.action.responder import ResponseService
+from askbob.speech.listener import UtteranceService
 from askbob.speech.transcriber import Transcriber
 
 
-def make_transcriber(config: dict, device: int, rate: int, file: str, savepath: str) -> Transcriber:
+def make_transcriber(config: dict, device: int, rate: int, filename: str, savepath: str) -> Transcriber:
     """Makes a new transcriber instance from the parameters provided."""
 
     if 'Listener' not in config:
@@ -19,8 +20,12 @@ def make_transcriber(config: dict, device: int, rate: int, file: str, savepath: 
     model_path = config['Listener']['model']
     scorer_path = config['Listener']['scorer'] if 'scorer' in config['Listener'] else ''
 
-    return Transcriber(model=model_path, scorer=scorer_path, aggressiveness=config['Listener'].getint(
-        'aggressiveness', fallback=1), device_index=device, rate=rate, filename=file, save_path=savepath)
+    us = UtteranceService(aggressiveness=config['Listener'].getint('aggressiveness', fallback=1),
+                          device_index=device,
+                          input_rate=rate,
+                          filename=filename)
+
+    return Transcriber(model=model_path, scorer=scorer_path, us=us, save_path=savepath)
 
 
 async def interactive_loop(args, config, responder: ResponseService):

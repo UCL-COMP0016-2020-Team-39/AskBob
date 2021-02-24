@@ -17,16 +17,12 @@ class TranscriptionEvent(enum.Enum):
 class Transcriber:
     """The transcriber performs speech-to-text on captured utterances spoken by the user."""
 
-    def __init__(self, model: str, scorer: str, aggressiveness: int,
-                 device_index: int, rate: int, filename: str, save_path: str):
+    def __init__(self, model: str, scorer: str, us: UtteranceService, save_path: str):
         # Load the DeepSpeech model
         self.model = self.init_deepspeech(model, scorer)
 
-        # Start audio
-        self.us = UtteranceService(aggressiveness=aggressiveness,
-                                   device_index=device_index,
-                                   input_rate=rate,
-                                   filename=filename)
+        # Utterance service
+        self.us = us
         self.save_path = save_path
 
     def init_deepspeech(self, model_path: str, scorer_path: str = "") -> deepspeech.Model:
