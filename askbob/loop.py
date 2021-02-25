@@ -1,8 +1,9 @@
-import os
+from askbob.speech.listener import file
+from askbob.speech.listener.file import FileUtteranceService
 import logging
 
 from askbob.action.responder import ResponseService
-from askbob.speech.listener import UtteranceService
+from askbob.speech.listener.mic import MicUtteranceService
 from askbob.speech.transcriber import Transcriber
 
 
@@ -20,10 +21,13 @@ def make_transcriber(config: dict, device: int, rate: int, filename: str, savepa
     model_path = config['Listener']['model']
     scorer_path = config['Listener']['scorer'] if 'scorer' in config['Listener'] else ''
 
-    us = UtteranceService(aggressiveness=config['Listener'].getint('aggressiveness', fallback=1),
-                          device_index=device,
-                          input_rate=rate,
-                          filename=filename)
+    if filename:
+        us = FileUtteranceService(filename=filename, aggressiveness=config['Listener'].getint(
+            'aggressiveness', fallback=1))
+    else:
+        us = MicUtteranceService(aggressiveness=config['Listener'].getint('aggressiveness', fallback=1),
+                                 device_index=device,
+                                 input_rate=rate)
 
     return Transcriber(model=model_path, scorer=scorer_path, us=us, save_path=savepath)
 

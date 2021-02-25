@@ -5,7 +5,7 @@ import logging
 import numpy as np
 import os
 
-from askbob.speech.listener import UtteranceService
+from askbob.speech.listener.listener import UtteranceService
 
 
 class TranscriptionEvent(enum.Enum):
@@ -88,5 +88,4 @@ class Transcriber:
 
                     stream_context = self.model.createStream()
         except KeyboardInterrupt:
-            yield TranscriptionEvent.END_UTTERANCE, ""
             return

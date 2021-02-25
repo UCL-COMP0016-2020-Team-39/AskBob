@@ -1,8 +1,6 @@
 import collections
 import logging
-from typing import Optional, Text
 import numpy as np
-import pyaudio
 import queue
 import scipy
 import scipy.signal
@@ -11,99 +9,26 @@ import webrtcvad
 
 
 class UtteranceService:
-    """The UtteranceService is responsible for recording complete utterances for the speech transcriber."""
+    """The UtteranceService is responsible for compiling complete utterances for the speech transcriber."""
 
-    format = pyaudio.paInt16
     channels: int = 1
     sample_rate: int = 16000
+    input_rate: int
     blocks_per_second: int = 50
 
+    # the number of samples/frames in each block (#samples == #blocks as channels == 1)
     block_size: int = sample_rate // blocks_per_second
-
     frame_duration_ms: int = property(
         lambda self: 1000 * self.block_size // self.sample_rate)
 
     buffer_queue: queue.Queue
-    device_index: int
-    input_rate: int
-    block_size_input: int
-    pa: pyaudio.PyAudio
-    stream: pyaudio.Stream
     vad: webrtcvad.Vad
 
-    def __init__(self, aggressiveness: int = 1, device_index: int = None, input_rate: int = 16000,
-                 filename: Optional[str] = None, lowpass_frequency: int = 65, highpass_frequency: int = 4000):
+    def __init__(self, aggressiveness: int = 1, lowpass_frequency: int = 65, highpass_frequency: int = 4000) -> None:
         self.buffer_queue = queue.Queue()
-        self.device_index = device_index
-        self.input_rate = input_rate
-        self.block_size_input = self.input_rate // self.blocks_per_second
-        self.pa = pyaudio.PyAudio()
-        self.stream = self._create_stream(filename)
         self.vad = webrtcvad.Vad(aggressiveness)
 
-        logging.info("Found input sound devices: " + '; '.join([
-            f"({i}) {self.pa.get_device_info_by_host_api_device_index(0, i).get('name')}"
-            for i in range(0, self.pa.get_host_api_info_by_index(0)['deviceCount'])
-            if self.pa.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels') > 0
-        ]))
-
-        if device_index is not None:
-            logging.info(f"Using input sound device index: {device_index}")
-        else:
-            logging.info(
-                f"Using default input sound device index: {self.pa.get_host_api_info_by_index(0)['defaultInputDevice']}")
-
         self._init_filter(lowpass_frequency, highpass_frequency)
-
-    def _create_stream(self, filename: Optional[str] = None):
-        """Creates a new audio stream.
-
-        Args:
-            filename (str): The filename to store complete utterances at.
-        """
-
-        def callback(in_data, frame_count, time_info, status):
-            if self.chunk is not None:
-                in_data = self.wf.readframes(self.chunk)
-            self.buffer_queue.put(in_data)
-            return (None, pyaudio.paContinue)
-
-        kwargs = {
-            'format': self.format,
-            'channels': self.channels,
-            'rate': self.input_rate,
-            'input': True,
-            'frames_per_buffer': self.block_size_input,
-            'stream_callback': callback
-        }
-
-        self.chunk = None
-        if self.device_index:  # non-default device_index selected
-            kwargs['input_device_index'] = self.device_index
-        elif filename is not None:
-            self.chunk = 320
-            self.wf = wave.open(filename, 'rb')
-
-        stream = self.pa.open(**kwargs)
-        stream.start_stream()
-
-        return stream
-
-    def _end_stream(self, stream):
-        """Terminates a given stream.
-
-        Args:
-            stream (Stream): The stream to terminate.
-        """
-
-        stream.stop_stream()
-        stream.close()
-
-    def _destroy(self):
-        """Destroys the stream and terminates recording with PyAudio."""
-
-        self._end_stream(self.stream)
-        self.pa.terminate()
 
     def _resample(self, data):
         """Resamples audio frames to the sample rate needed for DeepSpeech and webrtcvad (16000Hz).
@@ -212,3 +137,6 @@ class UtteranceService:
             return
         finally:
             self._destroy()
+
+    def _destroy(self) -> None:
+        pass
