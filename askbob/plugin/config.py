@@ -92,6 +92,15 @@ policies:
                               for entity in config['entities']])
                 f.write('\n')
 
+            if 'slots' in config:
+                f.write('\nslots:\n')
+                for slot in config['slots']:
+                    f.write(f'  {slot}:\n')
+                    f.writelines([f"    {key}: {config['slots'][slot][key]}\n"
+                                  for key in config['slots'][slot]])
+
+                f.write('\n')
+
             if 'actions' in config:
                 f.write('\nactions:\n')
                 f.writelines(['  - {}\n'.format(self.get_action(action, plugin))

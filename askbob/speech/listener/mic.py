@@ -6,7 +6,6 @@ from askbob.speech.listener.listener import UtteranceService
 
 class MicUtteranceService(UtteranceService):
 
-    format = pyaudio.paInt16
     device_index: int
     pa: pyaudio.PyAudio
     stream: pyaudio.Stream
@@ -41,7 +40,7 @@ class MicUtteranceService(UtteranceService):
             return (None, pyaudio.paContinue)
 
         stream = self.pa.open(
-            format=self.format,
+            format=pyaudio.paInt16,
             channels=self.channels,
             rate=self.input_rate,
             input=True,
