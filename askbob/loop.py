@@ -1,9 +1,6 @@
-from askbob.speech.listener import file
-from askbob.speech.listener.file import FileUtteranceService
 import logging
 
 from askbob.action.responder import ResponseService
-from askbob.speech.listener.mic import MicUtteranceService
 from askbob.speech.transcriber import Transcriber
 
 
@@ -22,9 +19,11 @@ def make_transcriber(config: dict, device: int, rate: int, filename: str, savepa
     scorer_path = config['Listener']['scorer'] if 'scorer' in config['Listener'] else ''
 
     if filename:
+        from askbob.speech.listener.file import FileUtteranceService
         us = FileUtteranceService(filename=filename, aggressiveness=config['Listener'].getint(
             'aggressiveness', fallback=1))
     else:
+        from askbob.speech.listener.mic import MicUtteranceService
         us = MicUtteranceService(aggressiveness=config['Listener'].getint('aggressiveness', fallback=1),
                                  device_index=device,
                                  input_rate=rate)
@@ -74,5 +73,7 @@ async def interactive_loop(args, config, responder: ResponseService):
                         print("=>", response["text"])
                         speaker.say(response["text"])
 
+            if args.file:
+                return
         else:
             logging.error("Unknown transcription event: " + state)
