@@ -95,9 +95,39 @@ policies:
             if 'slots' in config:
                 f.write('\nslots:\n')
                 for slot in config['slots']:
-                    f.write(f'  {slot}:\n')
-                    f.writelines([f"    {key}: {config['slots'][slot][key]}\n"
-                                  for key in config['slots'][slot]])
+                    if 'slot_id' not in slot:
+                        raise RuntimeError(
+                            "Each slot definition must contain a 'slot_id' field.")
+
+                    if 'type' not in slot:
+                        raise RuntimeError(
+                            "Each slot definition must contain a 'type' field.")
+
+                    if slot['type'] not in ['text', 'bool', 'categorical', 'float', 'list', 'any']:
+                        raise RuntimeError(
+                            f"Unknown slot type '{slot['type']}'.")
+
+                    f.write(f"  {slot['slot_id']}:\n")
+                    f.write(f"    type: {slot['type']}\n")
+
+                    if 'influence_conversation' in slot:
+                        f.write(
+                            f"    influence_conversation: {slot['influence_conversation']}\n")
+
+                    if slot['type'] == 'float':
+                        if 'min_value' in slot:
+                            f.write(f"    min_value: {slot['min_value']}")
+
+                        if 'max_value' in slot:
+                            f.write(f"    max_value: {slot['max_value']}")
+
+                    if slot['type'] == 'categorical':
+                        if 'values' not in slot or not isinstance(slot['values'], list):
+                            raise RuntimeError(
+                                "Slot of type 'categorical' must have a 'values' list of acceptable slot values.")
+
+                        f.writelines(
+                            [f"      - {value}" for value in slot['values']])
 
                 f.write('\n')
 
