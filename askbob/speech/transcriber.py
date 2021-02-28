@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 import deepspeech
 import enum
 import logging
@@ -17,7 +18,7 @@ class TranscriptionEvent(enum.Enum):
 class Transcriber:
     """The transcriber performs speech-to-text on captured utterances spoken by the user."""
 
-    def __init__(self, model: str, scorer: str, us: UtteranceService, save_path: str):
+    def __init__(self, model: str, scorer: str, us: UtteranceService, save_path: Optional[str] = None):
         # Load the DeepSpeech model
         self.model = self.init_deepspeech(model, scorer)
 
@@ -52,6 +53,9 @@ class Transcriber:
             TranscriptionEvent: Whether the utterance has started or ended.
             str: The transcribed phrase spoken by the user.
         """
+
+        if not self.us:
+            return
 
         if self.save_path:
             os.makedirs(self.save_path, exist_ok=True)

@@ -23,10 +23,11 @@ def routes(app, responder, plugin_configs):
 
         if not sender.isprintable():
             return json({
-                "error": "The message must contain printable characters."
+                "error": "The sender must contain printable characters."
             })
 
         return json({
+            "query": message,
             "messages": [
                 response async for response in responder.handle(message, sender)]
         })

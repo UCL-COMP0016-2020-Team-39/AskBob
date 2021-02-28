@@ -38,7 +38,7 @@ def main():
         if args.serve:
             # Run Ask Bob in server mode
             from .server import serve
-            serve(responder, config)
+            serve(responder, config, args.voice)
         else:
             # Run Ask Bob in interactive mode
             from askbob.loop import interactive_loop

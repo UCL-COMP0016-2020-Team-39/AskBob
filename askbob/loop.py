@@ -16,7 +16,7 @@ def make_transcriber(config: dict, device: int, rate: int, filename: str, savepa
             "Missing Listener.model in the runtime configuration file.")
 
     model_path = config['Listener']['model']
-    scorer_path = config['Listener']['scorer'] if 'scorer' in config['Listener'] else ''
+    scorer_path = config['Listener'].get('scorer', '')
 
     if filename:
         from askbob.speech.listener.file import FileUtteranceService

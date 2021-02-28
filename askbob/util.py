@@ -27,7 +27,7 @@ def make_argument_parser() -> argparse.ArgumentParser:
         argparse.ArgumentParser: the CLI argument parser
     """
     parser = argparse.ArgumentParser(
-        description="Ask Bob: a customisable voice assistant.")
+        description="AskBob: a customisable voice assistant.")
 
     parser.add_argument('-c', '--config', default="config.ini",
                         help="The configuration file.")
@@ -46,6 +46,9 @@ def make_argument_parser() -> argparse.ArgumentParser:
 
     parser.add_argument('-s', '--serve', default=False, action='store_true',
                         help="Run Ask Bob as a server instead of interactively.")
+
+    parser.add_argument('-v', '--voice', default=False, action='store_true',
+                        help="Enable speech transcription in server mode.")
 
     parser.add_argument('--setup', const=".", nargs="?",
                         help="Setup Ask Bob from the configuration JSON file provided.")
