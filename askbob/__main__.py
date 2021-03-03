@@ -27,6 +27,11 @@ def main():
                 "Missing Rasa.model location in the runtime configuration file.")
             return
 
+        if args.voice and not args.serve:
+            logging.error(
+                "The -v flag must be used in conjunction with the -s flag.")
+            return
+
         # Run the voice assistant
         from askbob.action.responder import RasaResponseService
         responder = RasaResponseService(
