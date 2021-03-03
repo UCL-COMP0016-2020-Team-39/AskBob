@@ -1,10 +1,10 @@
 # AskBob
 
-AskBob is an easily customisable, completely federated voice assistant deployable on low-power devices.
+**AskBob** is an easily customisable, completely federated voice assistant deployable on low-power devices.
 
 ## Docker (for use as a server only)
 
-If you are only using Ask Bob as a server (headlessly), then you can do this using Docker with the `Dockerfile` provided.
+If you are only using **AskBob** as a server (headlessly), then you can do this using Docker with the `Dockerfile` provided.
 
 ### Installation
 
@@ -20,18 +20,16 @@ $ docker build --build-arg ASKBOB_SETUP_CONFIG=default_config.json -t askbob .
 
 ### Usage
 
-The Ask Bob server can then be launched using the following command:
+The **AskBob** server can then be launched using the following command:
 ```bash
 $ docker run -it --rm -p 8000:8000 askbob
 ```
 
-## Local use (for interactive and server modes of use)
-
-### Installation
+## Local use (for all modes of use)
 
 First, ensure you have Python 3.7 and `pip` installed on your system. Pip may be installed using the following command:
 ```bash
-$ curl https://bootstrap.pypa.io/get-pip.py | sudo python3.7
+$ curl https://bootstrap.pypa.io/get-pip.py | sudo python
 ```
 On Linux, you must ensure you have the right Python dev package installed, e.g. `python3.7-dev` on Ubuntu.
 
@@ -40,63 +38,107 @@ Next, ensure that your versions of `pip`, `setuptools` and `wheel` are up to dat
 $ python -m pip install -U pip setuptools wheel
 ```
 
-Dependencies shared across all Ask Bob utilisation modes (interactively or as a REST API server) may then be installed by running the follwoing commands:
+### Installation
+
+Dependencies shared across all **AskBob** utilisation modes (interactive mode, voiceless RESTful web API server or voice-enabled RESTful web API server) are installed by the default **AskBob** package wit no extras, as are the components required to run **AskBob** as a voiceless (i.e. with no speech-to-text capabilities) RESTful web API server.
+
+The latest release of **AskBob** may be installed from the Python Package Index using the following command:
 ```bash
-$ python -m pip install -r requirements/common.txt
-$ python -m spacy download en_core_web_md
-$ python -m spacy link en_core_web_md en
+$ python -m pip install askbob
 ```
 
-If you want to use the voice assistant interactively (i.e. with speech transcription and synthesis enabled), you must have a `portaudio` binary installed.
+Alternatively, the very latest version of **AskBob** can also be installed from this GitHub repository using the following commands (assuming `git` is installed):
+```bash
+$ git clone https://github.com/UCL-COMP0016-2020-Team-39/AskBob
+$ cd AskBob
+$ python -m pip install -e .
+```
 
-On Ubuntu, this can be done with the following command:
+The **AskBob** Python package may be installed with multiple 'extras' depending on the use case:
+- voice
+- interactive
+- docs
+- test
+
+A compatible `spaCy` model must then be installed (the `en_core_web_md` model is recommended) with the following command:
+```bash
+$ python -m spacy download en_core_web_md
+```
+
+#### Voice-enabled RESTful web API server mode
+
+To run the **AskBob** server in voice-enabled mode, where WAV files of speech can be uploaded to the **AskBob** server on the `/voicequery` endpoint from which **AskBob** will produce a JSON response, additional voice-related dependencies must be installed.
+
+When installing **AskBob** from PyPi, use the following command:
+```bash
+$ python -m pip install askbob[voice]
+```
+
+When installing **AskBob** from a clone of this GitHub repository, instead use the following command:
+```bash
+$ python -m pip install .[voice]
+```
+
+#### Interactive mode
+
+To run **AskBob** as a voice assistant interactively (i.e. with speech transcription and synthesis enabled), additional interactive mode-related dependencies must be installed.
+
+Firstly, the cross-platform audio API `portaudio` must be installed on your machine.
+
+On Ubuntu, the `portaudio` binary can be installed with the following command:
 ```bash
 $ sudo apt install portaudio19-dev python3-pyaudio
 ```
 
-On Windows, you may have to compile the `portaudio` binary used by Ask Bob from source.
+On Windows, you may have to compile the `portaudio` binary used by **AskBob** from source.
 
 **Note**: Christoph Gohlke maintains unofficial Windows binaries for Python extension packages, including for [PyAudio](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio), which may be installed using `pip install INSERT_BINARY_LOCATION`.
 
-With all these requirements satisfied, you may proceed by installing Ask Bob's voice-related dependencies with the following command:
-```bash
-$ python -m pip install -r requirements/voice.txt
-```
 
-**Note**: if you get an `ImportError` related to `_portaudio`, then you may have to additionally run the following commands (assuming you have `git` installed):
+If you get an `ImportError` related to `_portaudio`, then you may have to additionally run the following commands (assuming you have `git` installed):
 ```bash
 $ git clone https://people.csail.mit.edu/hubert/git/pyaudio.git
 $ cd pyaudio
 $ sudo python setup.py install
 ```
 
-With `portaudio` properly installed, you will then need to find a [mozilla\DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.2)-compatible model and scorer to be used with AskBob. Once downloaded, place the files in the `data` folder and update the runtime configuration file (`config.ini`) with the correct file names.
+With `portaudio` properly installed, you will then need to find a [mozilla\DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.3)-compatible model and scorer to be used with **AskBob**. Once downloaded, place the files in the `data` folder and update the runtime configuration file (`config.ini`) with the correct file paths to the model and scorer, respectively.
 
-You may also have to modify the configuration depending on the voices available on your system, which may be found using the following sequence of Python commands:
+You may also have to modify the configuration depending on the text-to-speech voices made available by your operating system, which may be found using the following sequence of Python commands:
 ```python
 >>> import pyttsx3
 >>> print(*[voice.id for voice in pyttsx3.init().getProperty('voices')])
 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0
 ```
 
+Once this is done, the additional **AskBob** `interactive` extra must be installed. When installing **AskBob** from PyPi, use the following command:
+```bash
+$ python -m pip install askbob[interactive]
+```
+
+When installing **AskBob** from a clone of this GitHub repository, instead use the following command:
+```bash
+$ python -m pip install .[interactive]
+```
+
 ### Training
 
-The Ask Bob voice assistant must be trained before use (this is done automatically when building the Docker container). This may be done using the following command:
+The **AskBob** voice assistant must be trained before use (this is done automatically when building the Docker container). This may be done using the following command:
 
 ```bash
 $ python -m askbob --setup [optional additional configuration JSON file]
 ```
 
-Ask Bob will train off installed plugins only if no additional configuration JSON file is provided.
+**AskBob** will train off installed plugins only if no additional configuration JSON file is provided.
 
-The following command is an example of how Ask Bob could be trained:
+The following command is an example of how **AskBob** could be trained:
 ```bash
 $ python -m askbob --setup default_config.json
 ```
 
 ### Usage
 
-Ask Bob may be run interactively with the following command:
+**AskBob** may be run interactively with the following command:
 ```bash
 $ python -m askbob
 ```
@@ -106,18 +148,23 @@ You can specify your own runtime config.ini file with the -c flag:
 $ python -m askbob -c config.ini
 ```
 
-AskBob can also be run as a server with the following command:
+**AskBob** can also be run as a standalone server with the following command:
 ```bash
 $ python -m askbob -s
+```
+
+The `/voicequery` endpoint where a single-channel (preferably 16kHz) WAV file (<10MiB in size) may be uploaded is enableable by starting **AskBob** with the `-v` flag in addition to the `-s` flag, i.e.
+```bash
+$ python -m askbob -s -v
 ```
 
 Further help is available using the `--help` flag.
 ```bash
 $ python -m askbob --help
 usage: __main__.py [-h] [-c CONFIG] [-w SAVEPATH] [-f FILE] [-d DEVICE]
-                   [-r RATE] [-s] [--setup [SETUP]]
+                   [-r RATE] [-s] [-v] [--setup [SETUP]]
 
-Ask Bob: a customisable voice assistant.
+**AskBob**: a customisable voice assistant.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -132,9 +179,10 @@ optional arguments:
                         pyaudio.PyAudio.get_default_device().
   -r RATE, --rate RATE  The input device sample rate (your device might
                         require 44100Hz). Default: 16000.
-  -s, --serve           Run Ask Bob as a server instead of interactively.
-  --setup [SETUP]       Setup Ask Bob from the configuration JSON file
-                        provided and those from installed plugins.
+  -s, --serve           Run AskBob as a server instead of interactively.
+  -v, --voice           Enable speech transcription in server mode.
+  --setup [SETUP]       Setup AskBob from the configuration JSON file
+                        provided.
 ```
 
 ## Runtime Configuration Options
@@ -165,8 +213,8 @@ config = data/rasa/config
 model = data/rasa/models
 ```
 
-- `config` is the location where Ask Bob will generate a set of Rasa YAML config files
-- `model` is the location where Ask Bob will place trained Rasa models
+- `config` is the location where **AskBob** will generate a set of Rasa YAML config files
+- `model` is the location where **AskBob** will place trained Rasa models
 
 It is highly recommended that you do not change either of these values.
 
@@ -177,8 +225,8 @@ host = 0.0.0.0
 port = 8000
 ```
 
-- `host` is the host Ask Bob will bind to when being run in server mode (0.0.0.0 if unspecified)
-- `post` is the post Ask Bob will bind to when being run in server mode (8000 if unspecified)
+- `host` is the host **AskBob** will bind to when being run in server mode (0.0.0.0 if unspecified)
+- `post` is the post **AskBob** will bind to when being run in server mode (8000 if unspecified)
 
 ### Plugins
 ```ini
@@ -194,7 +242,35 @@ summary = data/summary.json
 
 It is highly recommended that you do not change any of these values.
 
+## Documentation
+
+Before attempting to generate the documentation, ensure that the documentation tools are installed.
+```bash
+$ python -m pip install .[docs]
+```
+
+The documentation can be generated using the following commands on Linux:
+```bash
+$ cd docs
+$ make html
+```
+
+On Windows in a bash-style terminal, use the `make.bat` file provided in the following way:
+```bash
+> cd docs
+> ./make.bat html
+```
+
+The generated documentation will be found at `docs/_build/html`.
+
+In order to generate the full documentation, ensure all project dependencies are installed (all extras, i.e. voice, interactive, etc).
+
 ## Tests
+
+Before running any tests, ensure that **AskBob** was installed with the `test` extra to additionally include the testing suite.
+```bash
+$ python -m pip install -e .[test]
+```
 
 Tests may be run with the following command:
 ```bash
