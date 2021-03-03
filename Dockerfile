@@ -11,13 +11,12 @@ RUN mkdir data
 
 COPY ./askbob askbob
 COPY ./plugins plugins
+COPY ./data data
 COPY ./*.ini .
 COPY ./*.json .
 COPY ./README.md .
 COPY ./MANIFEST.in .
 COPY ./setup.py .
-COPY ./data/*.pbmm data
-COPY ./data/*.scorer data
 
 RUN python -m pip install -U pip setuptools wheel
 
