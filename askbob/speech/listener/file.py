@@ -13,7 +13,13 @@ class FileUtteranceService(UtteranceService):
         wf = wave.open(filename, 'rb')
         self.input_rate = wf.getframerate()
 
+        if wf.getnchannels() != 1:
+            raise RuntimeError(
+                "Uploaded WAV files must only have a single audio channel (mono).")
+
         data = wf.readframes(self.chunk)
         while data:
             self.buffer_queue.put(data)
             data = wf.readframes(self.chunk)
+
+        wf.close()
