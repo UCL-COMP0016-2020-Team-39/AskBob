@@ -281,5 +281,3 @@ Code coverage may be generated using the following command:
 ```bash
 $ python -m pytest --cov-report html:cov_html --cov=askbob tests/
 ```
-
-**Note**: you must have `pytest-cov` installed to generate the coverage report (this will have been installed if you ran `python setup.py install test`).
