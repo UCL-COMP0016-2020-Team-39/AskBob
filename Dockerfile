@@ -25,6 +25,6 @@ RUN python -m spacy download en_core_web_md
 
 RUN python -m askbob --setup $ASKBOB_SETUP_CONFIG
 
-ENTRYPOINT python -m askbob -s -v
+ENTRYPOINT python -m askbob -s
 
 EXPOSE 8000
