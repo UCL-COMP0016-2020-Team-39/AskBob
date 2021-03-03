@@ -62,12 +62,25 @@ def voice_routes(app: Sanic, responder, config: dict):
         f.write(file.body)
         f.close()
 
-        transcriber.us = FileUtteranceService(filename=f.name, aggressiveness=config['Listener'].getint(
-            'aggressiveness', fallback=1))
+        try:
+            transcriber.us = FileUtteranceService(filename=f.name, aggressiveness=config['Listener'].getint(
+                'aggressiveness', fallback=1))
+        except Exception as e:
+            transcriber.us = None
+            return json({
+                "error": str(e)
+            })
 
         for state, text in transcriber.transcribe():
             if state == TranscriptionEvent.END_UTTERANCE:
                 os.unlink(f.name)
+                transcriber.us = None
+                if not text or text.isspace():
+                    return json({
+                        "query": "",
+                        "messages": []
+                    })
+
                 return json({
                     "query": text,
                     "messages": [
@@ -75,3 +88,6 @@ def voice_routes(app: Sanic, responder, config: dict):
                 })
 
         transcriber.us = None
+        return json({
+            "error": "Speech transcription failed."
+        })
