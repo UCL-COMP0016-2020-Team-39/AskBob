@@ -19,6 +19,12 @@ def serve(responder: ResponseService, config: dict, voice: bool = False):
 
     app = Sanic("Ask Bob", configure_logging=False)
 
+    if config['Server'].get('cors_origins', ''):
+        from sanic_cors import CORS
+        CORS(app, resources={
+            r"/*": {"origins": config['Server']['cors_origins']}
+        })
+
     routes(app, responder, plugin_configs)
 
     if voice:

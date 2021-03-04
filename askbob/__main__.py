@@ -41,6 +41,10 @@ def main():
         ) if 'Plugins' in config else RasaResponseService(config['Rasa']['model'])
 
         if args.serve:
+            if 'Server' not in config:
+                logging.error("No server configuration provided.")
+                return
+
             # Run Ask Bob in server mode
             from .server import serve
             serve(responder, config, args.voice)

@@ -223,10 +223,12 @@ It is highly recommended that you do not change either of these values.
 [Server]
 host = 0.0.0.0
 port = 8000
+cors_origins =
 ```
 
 - `host` is the host **AskBob** will bind to when being run in server mode (0.0.0.0 if unspecified)
 - `post` is the post **AskBob** will bind to when being run in server mode (8000 if unspecified)
+- `cors_origins` is the set of origins used for CORS (cross-origin resource sharing) - leave blank as above to disable CORS, otherwise something such as `cors_origins = *` would be typical for this configuration option.
 
 ### Plugins
 ```ini
