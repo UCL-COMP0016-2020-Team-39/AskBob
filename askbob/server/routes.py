@@ -2,11 +2,11 @@ from sanic.response import text, json
 
 
 def routes(app, responder, plugin_configs):
-    @app.route("/")
+    @app.route("/", methods=['GET', 'OPTIONS'])
     async def hello(request):
         return text("Hi, there! I think you might be in the wrong place... Bob.")
 
-    @app.route("/query", methods=['POST'])
+    @app.route("/query", methods=['POST', 'OPTIONS'])
     async def query(request):
         message = request.form.get('message')
         sender = request.form.get('sender')
@@ -32,7 +32,7 @@ def routes(app, responder, plugin_configs):
                 response async for response in responder.handle(message, sender)]
         })
 
-    @app.route("/skills")
+    @app.route("/skills", methods=['GET', 'OPTIONS'])
     async def skills(request):
         def get_intent_examples(plugin_config, intent_id):
             for intent in plugin_config['intents']:

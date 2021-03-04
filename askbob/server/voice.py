@@ -23,7 +23,7 @@ def voice_routes(app: Sanic, responder, config: dict):
         model=model_path, scorer=scorer_path, us=None)
 
     # Setup voice query handler
-    @app.route("/voicequery", methods=['POST'])
+    @app.route("/voicequery", methods=['POST', 'OPTIONS'])
     async def voice(request):
 
         sender = request.form.get('sender')
