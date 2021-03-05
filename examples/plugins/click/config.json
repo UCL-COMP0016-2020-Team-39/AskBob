@@ -1,0 +1,27 @@
+{
+    "plugin": "click",
+    "intents": [
+        {
+            "intent_id": "ask_click",
+            "examples": [
+                "click",
+                "click!",
+                "click please",
+                "please click",
+                "click the mouse"
+            ]
+        }
+    ],
+    "actions": [
+        "do_click"
+    ],
+    "skills": [
+        {
+            "description": "simulate a left click",
+            "intent": "ask_click",
+            "actions": [
+                "do_click"
+            ]
+        }
+    ]
+}
