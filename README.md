@@ -4,26 +4,39 @@
 
 ## Docker (for use as a server only)
 
-If you are only using **AskBob** as a server (headlessly), then you can do this using Docker with the `Dockerfile` provided.
+**AskBob** may be built and run as a server headlessly (with support for voice queries either enabled or disabled) using the Docker configurations provided.
 
 ### Installation
 
-Build the container using the following command:
+**AskBob** can be built without support for voice queries with `docker-compose` using the following command:
 ```bash
-$ docker build -t askbob .
+$ docker-compose build voiceless
 ```
 
-You can specify a config.json file in the same directory as this README.md file to train off using a docker build argument as in the following command:
+Similarly, **AskBob** can be built with such support using the following command:
 ```bash
-$ docker build --build-arg ASKBOB_SETUP_CONFIG=default_config.json -t askbob .
+$ docker-compose build voice
+```
+
+An additional build-time configuration (JSON) used in training may be specified using a build argument as in the following command:
+```bash
+$ docker-compose build --build-arg ASKBOB_SETUP_CONFIG=default_config.json voice
 ```
 
 ### Usage
 
-The **AskBob** server can then be launched using the following command:
+The **AskBob** server can then be launched using the following commands:
+
+- voice mode
 ```bash
-$ docker run -it --rm -p 8000:8000 askbob
+$ docker-compose up voice
+
 ```
+- voiceless mode
+```bash
+$ docker-compose up voiceless
+```
+
 
 ## Local use (for all modes of use)
 
