@@ -44,7 +44,7 @@ setup(name='askbob',
           "spacy~=2.2.4",
           "rasa[spacy]~=2.2.9",
           "sanic~=20.9.0",
-          "Sanic-Cors~0.10.0.post3",
+          "Sanic-Cors~=0.10.0.post3",
           "coloredlogs~=10.0"
       ],
       extras_require=extras,
