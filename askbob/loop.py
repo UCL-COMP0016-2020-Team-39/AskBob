@@ -75,5 +75,3 @@ async def interactive_loop(args, config, responder: ResponseService):
 
             if args.file:
                 return
-        else:
-            logging.error("Unknown transcription event: " + state)

@@ -5,6 +5,11 @@ model = 'data/deepspeech-0.9.1-models.pbmm'
 scorer = 'data/deepspeech-0.9.1-models.scorer'
 
 
+def test_transcriber_without_us():
+    transcriber = Transcriber(model=model, scorer='', us=None, save_path='')
+    transcriber.transcribe()
+
+
 def test_transcriber_without_scorer():
     us = FileUtteranceService(
         filename='tests/this is a test.wav', aggressiveness=1)
