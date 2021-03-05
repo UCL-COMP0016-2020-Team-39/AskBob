@@ -15,6 +15,7 @@ class UtteranceService:
     sample_rate: int = 16000
     input_rate: int
     blocks_per_second: int = 50
+    reset_buffer_queue: bool = True
 
     # the number of samples/frames in each block (#samples == #blocks as channels == 1)
     block_size: int = sample_rate // blocks_per_second
@@ -121,7 +122,8 @@ class UtteranceService:
                         triggered = False
                         yield None
                         ring_buffer.clear()
-                        self.buffer_queue = queue.Queue()
+                        if self.reset_buffer_queue:
+                            self.buffer_queue = queue.Queue()
                 else:
                     ring_buffer.append((frame, is_speech))
                     num_voiced = len(

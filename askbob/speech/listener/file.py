@@ -17,6 +17,7 @@ class FileUtteranceService(UtteranceService):
             raise RuntimeError(
                 "Uploaded WAV files must only have a single audio channel (mono).")
 
+        self.reset_buffer_queue = False
         data = wf.readframes(self.chunk)
         while data:
             self.buffer_queue.put(data)

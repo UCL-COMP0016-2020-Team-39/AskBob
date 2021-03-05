@@ -1,0 +1,70 @@
+{
+    "plugin": "puns",
+    "intents": [
+        {
+            "intent_id": "ask_if_funny",
+            "examples": [
+                "Are you funny?",
+                "How funny are you?",
+                "How good are your puns?",
+                "How good are your dad jokes?",
+                "How cheesy are your jokes?"
+            ]
+        },
+        {
+            "intent_id": "ask_joke",
+            "examples": [
+                "tell me a joke",
+                "tell me a joke please",
+                "tell me a dad joke",
+                "tell me a dad joke please",
+                "tell me a pun",
+                "tell me a pun please",
+                "give me a joke",
+                "give me a joke please",
+                "give me a dad joke",
+                "give me a dad joke please",
+                "give me a pun",
+                "give me a pun please",
+                "could you please tell me a joke?",
+                "could you tell me a joke?",
+                "I'd love to hear a joke",
+                "I'd love to hear a dad joke",
+                "I'd love to hear a pun",
+                "give me your cheesiest joke",
+                "give me a cheesy joke",
+                "tell me a cheesy joke",
+                "tell me something funny"
+            ]
+        }
+    ],
+    "responses": [
+        {
+            "response_id": "utter_funny_assurance",
+            "text": [
+                "I only give you the funniest, cheesiest jokes sourced from the finest joke distilleries.",
+                "Very funny! My puns must come from the humorous region of France, otherwise they're just sparkling dad jokes.",
+                "Very funny! I guarantee you'll be rolling on the floor laughing!"
+            ]
+        }
+    ],
+    "actions": [
+        "fetch_joke"
+    ],
+    "skills": [
+        {
+            "description": "tell a joke",
+            "intent": "ask_joke",
+            "actions": [
+                "fetch_joke"
+            ]
+        },
+        {
+            "description": "assure the user of the quality of dad jokes",
+            "intent": "ask_if_funny",
+            "actions": [
+                "utter_funny_assurance"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,77 @@
+[
+    {
+        "intents": [
+            {
+                "intent_id": "ask_hello",
+                "examples": [
+                    "Hello",
+                    "Hi",
+                    "Hey",
+                    "Howdy",
+                    "Howdy, partner"
+                ]
+            },
+            {
+                "intent_id": "ask_goodbye",
+                "examples": [
+                    "Goodbye",
+                    "Good bye",
+                    "Bye",
+                    "Bye bye",
+                    "See you",
+                    "See you later",
+                    "In a bit!",
+                    "Catch you later!"
+                ]
+            }
+        ],
+        "responses": [
+            {
+                "response_id": "utter_greeting",
+                "text": [
+                    "Hi there!",
+                    "Hey - nice to meet you!",
+                    "Hey there!"
+                ]
+            },
+            {
+                "response_id": "utter_goodbye",
+                "text": [
+                    "See you later!",
+                    "Bye!",
+                    "In a while, crocodile!"
+                ]
+            },
+            {
+                "response_id": "utter_please_rephrase",
+                "text": [
+                    "I didn't quite catch that! Please could you rephrase?"
+                ]
+            }
+        ],
+        "skills": [
+            {
+                "description": "Greet the user",
+                "intent": "ask_hello",
+                "actions": [
+                    "utter_greeting"
+                ]
+            },
+            {
+                "description": "Say goodbye to the user.",
+                "intent": "ask_goodbye",
+                "actions": [
+                    "utter_goodbye"
+                ]
+            },
+            {
+                "description": "NLU Fallback Rule",
+                "intent": "nlu_fallback",
+                "actions": [
+                    "utter_please_rephrase"
+                ]
+            }
+        ],
+        "plugin": "main"
+    }
+]
