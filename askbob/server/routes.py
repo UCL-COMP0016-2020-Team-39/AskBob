@@ -42,13 +42,23 @@ def routes(app, responder, plugin_configs):
             return []
 
         return json({
-            plugin_config['plugin']: [
+            'plugins': [
                 {
+                    'plugin': plugin_config['plugin'],
+                    'description': plugin_config.get('description', ''),
+                    'author': plugin_config.get('author', ''),
+                    'icon': plugin_config.get('icon', '')
+                }
+                for plugin_config in plugin_configs],
+            'skills': [
+                {
+                    'plugin': plugin_config['plugin'],
+                    'category': skill.get('category', 'miscellaneous'),
                     'description': skill['description'],
                     'examples': get_intent_examples(plugin_config, skill['intent'])
                 }
+                for plugin_config in plugin_configs
                 for skill in plugin_config['skills']
                 if 'description' in skill and skill['intent'] != 'nlu_fallback'
             ]
-            for plugin_config in plugin_configs
         })
