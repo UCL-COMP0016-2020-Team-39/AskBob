@@ -287,12 +287,7 @@ Before running any tests, ensure that **AskBob** was installed with the `test` e
 $ python -m pip install -e .[test]
 ```
 
-Tests may be run with the following command:
+Tests (with code coverage report generation) may be run with the following command:
 ```bash
-$ python -m pytest
-```
-
-Code coverage may be generated using the following command:
-```bash
-$ python -m pytest --cov-report html:cov_html --cov=askbob tests/
+$ python -m pytest tests/
 ```
