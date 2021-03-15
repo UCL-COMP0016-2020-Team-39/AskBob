@@ -32,7 +32,9 @@ def setup(args: dict, main_config: dict):
 
     mg = ModelGenerator()
     model = mg.generate(configs, main_config['Rasa']['config'],
-                        main_config['Rasa']['model'])
+                        main_config['Rasa']['model'],
+                        main_config['Rasa'].get('language', 'en'),
+                        main_config['Rasa'].get('spacy_model', 'en_core_web_md'))
 
     # Only generator a summary if training is successful
     if model and 'summary' in main_config['Plugins']:

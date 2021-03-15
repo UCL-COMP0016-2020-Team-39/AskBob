@@ -149,6 +149,37 @@ The following command is an example of how **AskBob** could be trained:
 $ python -m askbob --setup default_config.json
 ```
 
+#### Multilingual support
+
+**AskBob** may be used with any language supported for which `DeepSpeech` (for speech-to-text), `spaCy` (for natural language processing) and `pyttsx3` (for text-to-speech) models exist. To do this, the relevant models must be downloaded and installed, and then the **AskBob** `config.ini` must be changed to reflect the use of the new models.
+
+1. First, download new `DeepSpeech` models into the `data` folder and adjust the `model` and `scorer` parameters to use these new models:
+
+```ini
+[Listener]
+model = data/deepspeech-0.9.1-models.pbmm
+scorer = data/deepspeech-0.9.1-models.scorer
+```
+
+2. Then, download a new `spaCy` model for the language and update the language configuration (e.g. for French `fr`):
+
+```bash
+$ python -m spacy download fr_core_news_md
+```
+
+```ini
+[Rasa]
+language = fr
+spacy_model = fr_core_news_md
+```
+
+3. Modify the `voice_id` parameter in the text-to-speech settings to that of an installed TTS voice for that language. Supported voices are listed when **AskBob** is run in interactive mode.
+
+```ini
+[TTS]
+voice_id = HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0
+```
+
 ### Usage
 
 **AskBob** may be run interactively with the following command:
@@ -224,10 +255,14 @@ voice_id = HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-
 [Rasa]
 config = data/rasa/config
 model = data/rasa/models
+language = en
+spacy_model = en_core_web_md
 ```
 
 - `config` is the location where **AskBob** will generate a set of Rasa YAML config files
 - `model` is the location where **AskBob** will place trained Rasa models
+- `language` is a 2-letter language code representing the language to be used, e.g. `en` or `fr`.
+- `spacy_model` is the name of the `spaCy` model to be used, e.g. `en_core_web_md`
 
 It is highly recommended that you do not change either of these values.
 

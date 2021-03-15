@@ -22,12 +22,12 @@ class ModelGenerator:
         else:
             return f'action_{action}_{plugin}'
 
-    def generate_config_yml(self, location: str):
+    def generate_config_yml(self, location: str, rasa_language: str, spacy_model: str):
         with open(location + '/config.yml', 'w') as f:
-            f.write("""language: en
+            f.write(f"""language: {rasa_language}
 pipeline:
   - name: SpacyNLP
-    model: "en_core_web_md"
+    model: "{spacy_model}"
     case_sensitive: False
   - name: SpacyTokenizer
   - name: SpacyFeaturizer
@@ -245,7 +245,7 @@ session_config:
                                   for step in story['steps']])
                     f.write('\n')
 
-    def generate(self, configs, config_location, output_location):
+    def generate(self, configs, config_location, output_location, rasa_language, spacy_model):
         if os.path.exists(config_location):
             shutil.rmtree(config_location)
 
@@ -254,7 +254,7 @@ session_config:
         if not os.path.exists(output_location):
             os.makedirs(output_location)
 
-        self.generate_config_yml(config_location)
+        self.generate_config_yml(config_location, rasa_language, spacy_model)
         self.generate_credentials_yml(config_location)
         self.generate_endpoints_yml(config_location)
 
