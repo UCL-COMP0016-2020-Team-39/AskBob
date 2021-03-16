@@ -179,12 +179,12 @@ session_config:
 
             if 'synonyms' in config:
                 for synonym in config['synonyms']:
-                    if 'synonym' not in synonym or 'examples' not in synonym:
+                    if 'synonym_id' not in synonym or 'examples' not in synonym:
                         raise RuntimeError(
-                            "A synonym must have both a 'synonym' field and a list of examples under 'examples'.")
+                            "A synonym must have both a 'synonym_id' field and a list of examples under 'examples'.")
 
                     f.write(
-                        '  - synonym: {}\n    examples: |\n'.format(synonym['synonym']))
+                        '  - synonym: {}\n    examples: |\n'.format(synonym['synonym_id']))
                     f.writelines(
                         ['      - ' + example + '\n' for example in synonym['examples']])
                     f.write('\n')
