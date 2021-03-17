@@ -31,7 +31,7 @@ extras = {
 extras["interactive"] += extras["voice"]
 
 setup(name='askbob',
-      version='0.0.2',
+      version='0.0.3',
       description='A customisable, federated, privacy-safe voice assistant deployable on low-power devices.',
       long_description=long_description,
       long_description_content_type='text/markdown',
