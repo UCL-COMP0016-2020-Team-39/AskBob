@@ -137,7 +137,7 @@ policies:
                               for action in config['actions']])
                 f.write('\n\n')
 
-                # Responses
+            # Responses
             if 'responses' in config:
                 f.write('\nresponses:\n')
                 for response in config['responses']:

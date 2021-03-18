@@ -1,0 +1,159 @@
+{
+    "plugin": "plugin_name",
+    "description": "Human-readible plugin description.",
+    "author": "Foo Bar",
+    "icon": "https://example.com/icon-url.jpg",
+    "entities": [
+        "CARDINAL",
+        "DATE",
+        "EVENT",
+        "FAC",
+        "GPE",
+        "LANGUAGE",
+        "LAW",
+        "LOC",
+        "MONEY",
+        "NORP",
+        "ORDINAL",
+        "ORG",
+        "PERCENT",
+        "PERSON",
+        "PRODUCT",
+        "QUANTITY",
+        "TIME",
+        "WORK_OF_ART"
+    ],
+    "slots": [
+        {
+            "slot_id": "text_slot",
+            "type": "text",
+            "influence_conversation": false
+        },
+        {
+            "slot_id": "bool_slot",
+            "type": "bool",
+            "influence_conversation": true
+        },
+        {
+            "slot_id": "categorical_slot",
+            "type": "categorical",
+            "influence_conversation": false,
+            "values": [
+                "a",
+                "b"
+            ]
+        },
+        {
+            "slot_id": "float_slot",
+            "type": "float",
+            "influence_conversation": false,
+            "min_value": 0.0,
+            "max_value": 1.0
+        },
+        {
+            "slot_id": "list_slot",
+            "type": "list",
+            "influence_conversation": false
+        },
+        {
+            "slot_id": "any_slot",
+            "type": "any",
+            "influence_conversation": false
+        }
+    ],
+    "actions": [
+        "action_id",
+        "fetch_api_call"
+    ],
+    "responses": [
+        {
+            "response_id": "utter_sentence",
+            "text": [
+                "One of the random responses.",
+                "A variation on the above response.",
+                "Yet another variation for the same response."
+            ]
+        }
+    ],
+    "intents": [
+        {
+            "intent_id": "intent_id",
+            "examples": [
+                "An example of what the end user could say to trigger this intent.",
+                "An alternative way of saything the same thing.",
+                "These examples are used to train the Rasa natural language understanding model.",
+                "It is highly recommended that you list plenty of examples to improve accuracy!"
+            ]
+        }
+    ],
+    "synonyms": [
+        {
+            "synonym_id": "card",
+            "examples": [
+                "credit card",
+                "debit card"
+            ]
+        }
+    ],
+    "lookups": [
+        {
+            "lookup_id": "country",
+            "examples": [
+                "United Kingdom",
+                "France",
+                "Germany",
+                "Spain",
+                "Italy"
+            ]
+        }
+    ],
+    "regexes": [
+        {
+            "regex_id": "account_number",
+            "examples": [
+                "[0-9]+",
+                "\\b[0-9]+\\b"
+            ]
+        }
+    ],
+    "skills": [
+        {
+            "description": "A description of the skill.",
+            "intent": "intent_id",
+            "actions": [
+                "response_id",
+                "action_id"
+            ]
+        }
+    ],
+    "rules": [
+        {
+            "description": "A description of the Rasa rule. Rules expose Rasa rules, allowing developers to bypass using our 'skills' wrapper for them above.",
+            "steps": [
+                {
+                    "type": "intent",
+                    "value": "intent_id"
+                },
+                {
+                    "type": "action",
+                    "value": "action_id"
+                }
+            ]
+        }
+    ],
+    "stories": [
+        {
+            "description": "A description of the Rasa story used to improve training accuraccy.",
+            "steps": [
+                {
+                    "type": "intent",
+                    "step_id": "intent_id"
+                },
+                {
+                    "type": "action",
+                    "step_id": "action_id"
+                }
+            ]
+        }
+    ]
+}

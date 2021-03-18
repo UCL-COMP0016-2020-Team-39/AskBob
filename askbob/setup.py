@@ -27,7 +27,8 @@ def setup(args: dict, main_config: dict):
 
     if args.setup != ".":
         config = json.load(open(args.setup, 'r'))
-        config['plugin'] = 'main'
+        if 'plugin' not in config:
+            config['plugin'] = 'main'
         configs.append(config)
 
     mg = ModelGenerator()
