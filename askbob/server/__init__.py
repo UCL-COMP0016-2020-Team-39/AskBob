@@ -38,7 +38,7 @@ def serve(responder: ResponseService, config: dict, voice: bool = False):
                 "error": "Voice transcription is disabled on this server."
             }, status=503)
 
-    logging.info("Running Ask Bob HTTP server.")
+    logging.info("Running the Ask Bob HTTP server.")
     app.run(host=config['Server'].get('host', '0.0.0.0'),
             port=config['Server'].getint('port', fallback=8000),
             access_log=False)
