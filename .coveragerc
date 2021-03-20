@@ -15,5 +15,8 @@ exclude_lines =
     if 0:
     if __name__ == .__main__.:
 
+    # Fix shutil bug where it does not appear in coverage reports
+    shutil.rmtree
+
 [html]
 directory = cov_html

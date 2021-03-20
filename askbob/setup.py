@@ -38,7 +38,7 @@ def setup(args: dict, main_config: dict):
                         main_config['Rasa'].get('spacy_model', 'en_core_web_md'))
 
     # Only generator a summary if training is successful
-    if model and 'summary' in main_config['Plugins']:
+    if model.code == 0 and 'summary' in main_config['Plugins']:
         os.makedirs(os.path.dirname(
             main_config['Plugins']['summary']), exist_ok=True)
 

@@ -231,7 +231,7 @@ session_config:
                     for rule in config['rules']:
                         f.write(
                             f"  - rule: {rule.get('description', '')}\n    steps:\n")
-                        f.writelines([f"      - {step['type']}: {step['value']}\n"
+                        f.writelines([f"      - {step['type']}: {self.get_intent(step['value'], plugin) if step['type'] == 'intent' else self.get_action(step['value'], plugin)}\n"
                                       for step in rule['steps']])
                         f.write('\n')
 
@@ -242,7 +242,7 @@ session_config:
                 for story in config['stories']:
                     f.write(
                         '  - story: {}\n    steps:\n'.format(story.get('description', '')))
-                    f.writelines(['      - ' + step['type'] + ': ' + step['step_id'] + '\n'
+                    f.writelines(['      - ' + step['type'] + ': ' + self.get_intent(step['step_id'], plugin) if step['type'] == 'intent' else self.get_action(step['step_id'], plugin) + '\n'
                                   for step in story['steps']])
                     f.write('\n')
 
@@ -290,8 +290,5 @@ session_config:
             training_files=config_location + '/training',
             output=output_location
         )
-
-        if result.code != 0:
-            raise RuntimeError("Training could not be completed.")
 
         return result
