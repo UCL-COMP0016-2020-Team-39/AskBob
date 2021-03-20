@@ -1,3 +1,4 @@
+from askbob.speech.listener.mic import MicUtteranceService
 from askbob.speech.listener.file import FileUtteranceService
 from askbob.speech.transcriber import Transcriber, TranscriptionEvent
 

@@ -52,7 +52,7 @@ class MicUtteranceService(UtteranceService):
 
         return stream
 
-    def _destroy(self):
+    def _destroy(self) -> None:
         """Destroys the stream and terminates recording with PyAudio."""
         self.stream.stop_stream()
         self.stream.close()
