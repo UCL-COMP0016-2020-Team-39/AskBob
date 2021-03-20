@@ -89,19 +89,19 @@ class RasaResponseService(ResponseService):
             yield yielder(m)
 
 
-class HTTPResponseService(ResponseService):
-    """A ResponseService that uses Rasa's HTTP webhook to respond to queries."""
+# class HTTPResponseService(ResponseService):
+#     """A ResponseService that uses Rasa's HTTP webhook to respond to queries."""
 
-    endpoint: str
+#     endpoint: str
 
-    def __init__(self, endpoint_base) -> None:
-        self.endpoint = endpoint_base + "/webhooks/rest/webhook"
+#     def __init__(self, endpoint_base) -> None:
+#         self.endpoint = endpoint_base + "/webhooks/rest/webhook"
 
-    async def handle(self, query, sender="askbob"):
-        r = requests.post(self.endpoint, json={
-            "sender": sender,
-            "message": query
-        }).json()
+#     async def handle(self, query, sender="askbob"):
+#         r = requests.post(self.endpoint, json={
+#             "sender": sender,
+#             "message": query
+#         }).json()
 
-        for m in r:
-            yield yielder(m)
+#         for m in r:
+#             yield yielder(m)
