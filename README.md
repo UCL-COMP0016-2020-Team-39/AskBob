@@ -326,3 +326,5 @@ Tests (with code coverage report generation) may be run with the following comma
 ```bash
 $ python -m pytest tests/
 ```
+
+**Note**: the spaCy `en_core_web_md` model must be installed to run the test suite, as well as all dependencies (including interactive mode dependencies).
