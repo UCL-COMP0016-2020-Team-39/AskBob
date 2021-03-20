@@ -6,9 +6,10 @@ import logging
 class ModelGenerator:
 
     uses_stories: bool = False
+    dry_run: bool = False
 
-    def __init__(self):
-        pass
+    def __init__(self, dry_run: bool = False):
+        self.dry_run = dry_run
 
     def get_intent(self, intent: str, plugin: str):
         if plugin == "main":
@@ -277,6 +278,9 @@ session_config:
             logging.error(str(e))
             #raise e
             return None
+
+        if self.dry_run:
+            return 0
 
         from rasa import train
 
