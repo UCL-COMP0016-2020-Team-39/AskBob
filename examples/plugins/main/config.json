@@ -1,4 +1,5 @@
 {
+    "plugin": "main",
     "intents": [
         {
             "intent_id": "ask_hello",

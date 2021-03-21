@@ -54,7 +54,7 @@ def routes(app, responder, plugin_configs):
         return json({
             'plugins': [
                 {
-                    'plugin': plugin_config['plugin'],
+                    'plugin': plugin_config.get('plugin', 'miscellaneous'),
                     'description': plugin_config.get('description', ''),
                     'author': plugin_config.get('author', ''),
                     'icon': plugin_config.get('icon', '')
@@ -62,9 +62,9 @@ def routes(app, responder, plugin_configs):
                 for plugin_config in plugin_configs],
             'skills': [
                 {
-                    'plugin': plugin_config['plugin'],
+                    'plugin': plugin_config.get('plugin', 'miscellaneous'),
                     'category': skill.get('category', 'miscellaneous'),
-                    'description': skill['description'],
+                    'description': skill.get('description', ''),
                     'examples': get_intent_examples(plugin_config, skill['intent'])
                 }
                 for plugin_config in plugin_configs
