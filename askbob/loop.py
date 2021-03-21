@@ -78,5 +78,10 @@ async def interactive_loop(args, config, responder: ResponseService):
                         print("=>", response["custom"]["Response"])
                         speaker.say(response["custom"]["Response"])
 
+                        if "Steps" in response["custom"]:
+                            for step in response["custom"]["Steps"]:
+                                print("===>", step)
+                                speaker.say(step)
+
             if args.file:
                 return
