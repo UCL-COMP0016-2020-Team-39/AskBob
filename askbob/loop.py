@@ -73,5 +73,10 @@ async def interactive_loop(args, config, responder: ResponseService):
                         print("=>", response["text"])
                         speaker.say(response["text"])
 
+                    # Concierge integration
+                    elif "custom" in response and "Response" in response["custom"]:
+                        print("=>", response["custom"]["Response"])
+                        speaker.say(response["custom"]["Response"])
+
             if args.file:
                 return
