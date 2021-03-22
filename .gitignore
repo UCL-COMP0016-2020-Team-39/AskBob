@@ -115,7 +115,7 @@ cython_debug/
 # Editor settings
 .vscode
 
-# Ask Bob
+# Ask Bob folders
 data
 voice_samples
 cov_html
