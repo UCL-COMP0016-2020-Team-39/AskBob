@@ -292,11 +292,186 @@ summary = data/summary.json
 
 It is highly recommended that you do not change any of these values.
 
+## Server endpoints
+
+The following is a description of the endpoints available when running **AskBob** in server mode.
+
+### GET /
+
+This is just a landing page that returns the message below:
+> "Hi, there! I think you might be in the wrong place... Bob."
+
+### POST /query
+
+**Request** (encoded as `x-www-form-urlencoded`):
+- `sender` - a unique identifier for the current user
+- `message` - a query for **AskBob** to interpret
+
+**Response** (JSON):
+
+```json
+{
+    "query": "the original query",
+    "messages": [
+        // Ask Bob messages
+    ]
+}
+```
+
+For example, with the `sender` as `"askbob"` and the `message` as `"tell me a joke"`, **AskBob** using the example `puns` plugin could produce the following response:
+
+```json
+{
+    "query": "tell me a joke",
+    "messages": [
+        {
+            "text": "One joke, coming right up!"
+        },
+        {
+            "text": "Without geometry life is pointless."
+        }
+    ]
+}
+```
+
+In addition to `text`-type messages, **AskBob** plugins implementing `Rasa` custom actions may also pass back arbitrary JSON as `custom`-type messages, e.g. **AskBob** using the FISE video conferencing integration plugin:
+
+```json
+{
+    "query": "call John",
+    "messages": [
+        {
+            "text": "Calling John."
+        },
+        {
+            "custom": {
+                "type": "call_user",
+                "callee": "John"
+            }
+        }
+    ]
+}
+```
+
+There are also `image`-type messages available for third-party developers, which take the following form:
+```json
+{
+  "image": "http://example.com/image_url.png"
+}
+```
+
+### GET /query
+
+This endpoint is identical to `POST /query` above, other than `sender` and `message` may be passed as query string parameters, e.g. `GET /query?sender=askbob&message=hello`.
+
+### GET /skills
+
+This endpoint produces a JSON index that describes of all the plugins installed on an **AskBob** server. It returns data in the following format:
+
+```json
+{
+    "plugins": [
+        {
+            "plugin": "miscellaneous",
+            "description": "",
+            "author": "",
+            "icon": ""
+        },
+        {
+            "plugin": "puns",
+            "description": "",
+            "author": "",
+            "icon": ""
+        }
+    ],
+    "skills": [
+        {
+            "plugin": "miscellaneous",
+            "category": "miscellaneous",
+            "description": "Greet the user",
+            "examples": [
+                "Hello",
+                "Hi",
+                "Hey",
+                "Howdy",
+                "Howdy, partner"
+            ]
+        },
+        {
+            "plugin": "miscellaneous",
+            "category": "miscellaneous",
+            "description": "Say goodbye to the user.",
+            "examples": [
+                "Goodbye",
+                "Good bye",
+                "Bye",
+                "Bye bye",
+                "See you",
+                "See you later",
+                "In a bit!",
+                "Catch you later!"
+            ]
+        },
+        {
+            "plugin": "puns",
+            "category": "miscellaneous",
+            "description": "tell a joke",
+            "examples": [
+                "tell me a joke",
+                "tell me a joke please",
+                "tell me a dad joke",
+                "tell me a dad joke please",
+                "tell me a pun",
+                "tell me a pun please",
+                "give me a joke",
+                "give me a joke please",
+                "give me a dad joke",
+                "give me a dad joke please",
+                "give me a pun",
+                "give me a pun please",
+                "could you please tell me a joke?",
+                "could you tell me a joke?",
+                "I'd love to hear a joke",
+                "I'd love to hear a dad joke",
+                "I'd love to hear a pun",
+                "give me your cheesiest joke",
+                "give me a cheesy joke",
+                "tell me a cheesy joke",
+                "tell me something funny"
+            ]
+        },
+        {
+            "plugin": "puns",
+            "category": "miscellaneous",
+            "description": "assure the user of the quality of dad jokes",
+            "examples": [
+                "Are you funny?",
+                "How funny are you?",
+                "How good are your puns?",
+                "How good are your dad jokes?",
+                "How cheesy are your jokes?"
+            ]
+        }
+    ]
+}
+```
+
+### POST /voicequery
+
+When **AskBob** is being run as a voice-enabled server, an additional `/voicequery` endpoint becomes available.
+
+**Request**:
+- `sender` - a unique identifier for the current user (encoded as `x-www-form-urlencoded`)
+- `speech` - a 16000Hz single-channel WAV file under 10MiB containing a single speech utterance for **AskBob** to interpret (encoded as a form file upload)
+
+**Response**:
+- as in `POST /query` and `GET /query`
+
 ## Documentation
 
 Before attempting to generate the documentation, ensure that the documentation tools are installed.
 ```bash
-$ python -m pip install .[docs]
+$ python -m pip install askbob[docs]
 ```
 
 The documentation can be generated using the following commands on Linux:
