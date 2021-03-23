@@ -115,9 +115,9 @@ On Ubuntu, the `portaudio` binary can be installed with the following command:
 $ sudo apt install portaudio19-dev python3-pyaudio
 ```
 
-On Windows, you may have to compile the `portaudio` binary used by **AskBob** from source.
+To use **AskBob** in interactive mode on Windows -- as this requires additional compilation -- you must have [Build tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) installed on your system (or any other `pip`-compatible build tool). A direct download link may be found here: [https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16). You may then have to compile the `portaudio` binary used by **AskBob** from source.
 
-**Note**: Christoph Gohlke maintains unofficial Windows binaries for Python extension packages, including for [PyAudio](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio), which may be installed using `pip install INSERT_BINARY_LOCATION` after downloading the `pyaudio` wheel for Python 3.7.
+**Note**: Christoph Gohlke maintains unofficial Windows binaries for Python extension packages, including for [PyAudio](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio), which may be installed using `pip install INSERT_BINARY_LOCATION` after installing the relevant build tools and downloading the `pyaudio` wheel for Python 3.7.
 
 If **AskBob** is being installed on macOS and you get an `ImportError` related to `_portaudio`, then you may have to additionally run the following commands (assuming you have `git` installed):
 ```bash
@@ -294,6 +294,22 @@ $ docker-compose up voice
 - voiceless mode
 ```bash
 $ docker-compose up voiceless
+```
+
+### Demo AskBob project folder
+
+An **AskBob** project folder for demonstrative purposes is found under `examples/demo`. Once **AskBob** is installed locally on your machine, you can change into that directory and run the **AskBob** demonstration, e.g. as a server with `python -m askbob -s`. If you download DeepSpeech model/scorer pair into the `data` folder (`examples/demo/data`) and update the `config.ini` file if the model/scorer filenames require updating, you may also run `python -m askbob -s -v`. If the relevant dependencies for interactive mode are installed, the interactive demo may also be run with `python -m askbob` from that folder.
+
+A Docker Compose configuration is also provided as a part of the demo project folder to run the **AskBob** as a server.
+
+**AskBob** can be built without support for voice queries with `docker-compose` using the following command:
+```bash
+$ docker-compose build voiceless
+```
+
+Similarly, **AskBob** can be built with such support using the following command (provided you add DeepSpeech models into a `data` folder in `examples/demo`):
+```bash
+$ docker-compose build voice
 ```
 
 ## Runtime Configuration Options

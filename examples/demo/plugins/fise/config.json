@@ -1,0 +1,53 @@
+{
+    "plugin": "fise",
+    "entities": [
+        "PERSON"
+    ],
+    "intents": [
+        {
+            "intent_id": "ask_change_background",
+            "examples": [
+                "change the background",
+                "change the background please",
+                "please could you change the background?",
+                "could you change the background?",
+                "change my background",
+                "change my background please",
+                "please could you change my background?",
+                "could you change my background?"
+            ]
+        },
+        {
+            "intent_id": "ask_call",
+            "examples": [
+                "call Daniel",
+                "please could you call Tim",
+                "please could you call James for me",
+                "I would like to speak to Albert",
+                "I'd like to speak to Simon",
+                "video call David",
+                "video call David please"
+            ]
+        }
+    ],
+    "actions": [
+        "change_background",
+        "call"
+    ],
+    "skills": [
+        {
+            "description": "change the background",
+            "intent": "ask_change_background",
+            "actions": [
+                "change_background"
+            ]
+        },
+        {
+            "description": "call another user via video conferencing",
+            "intent": "ask_call",
+            "actions": [
+                "call"
+            ]
+        }
+    ]
+}

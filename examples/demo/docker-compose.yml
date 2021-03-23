@@ -1,0 +1,14 @@
+version: "3"
+services:
+  voice:
+    build:
+      context: .
+      dockerfile: ./docker/voice/Dockerfile
+    ports:
+      - "8000:8000"
+  voiceless:
+    build:
+      context: .
+      dockerfile: ./docker/voiceless/Dockerfile
+    ports:
+      - "8000:8000"
