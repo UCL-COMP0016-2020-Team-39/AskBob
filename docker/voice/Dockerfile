@@ -19,7 +19,7 @@ WORKDIR /askbob/build
 
 RUN mkdir data
 
-COPY ./examples/plugins plugins
+COPY ./plugins plugins
 COPY ./config.ini config.ini
 COPY ./*.json ./
 COPY ./data data

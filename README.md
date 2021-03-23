@@ -255,9 +255,13 @@ optional arguments:
 
 ## Docker (for use as a server only)
 
-**AskBob** may be built and run as a server headlessly (with support for voice queries either enabled or disabled) using the example Docker configurations provided.
+**AskBob** may be built and run as a server headlessly (with support for voice queries either enabled or disabled) using  Docker.
 
-**Note**: it is highly recommended that **AskBob** is installed locally using `pip` and that the `Docker` configuration related specifically to your project are placed within an **AskBob** *project folder* (containing the plugins and configuration specific to your project) rather than a cloned version of this repository.
+The Docker Compose configurations contained within *this repository* are for building, testing, developing and contributing to the **AskBob** codebase contained within this repository -- not creating your own **AskBob** builds.
+
+The [plugin skeleton repository](https://github.com/UCL-COMP0016-2020-Team-39/askbob-plugin-skeleton) contains an example Docker configuration that you can use to run **AskBob** using Docker within an **AskBob** *project folder* containing your own personal project.
+
+**Note**: it is highly recommended that for your own personal projects, you do install **AskBob** locally or use the example skeleton project Docker setup within an **AskBob** *project folder* (containing the plugins and configuration specific to your project), rather than attempting to clone *this repository* and develop your plugins there (while that may be possible).
 
 ### Installation & training
 
