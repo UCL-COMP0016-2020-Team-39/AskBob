@@ -500,7 +500,7 @@ This is just a landing page that returns the message below:
 
 **Response** (JSON):
 
-```json
+```javascript
 {
     "query": "the original query",
     "messages": [
