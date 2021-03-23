@@ -55,6 +55,22 @@ A compatible `spaCy` model must then be installed (the `en_core_web_md` model is
 $ python -m spacy download en_core_web_md
 ```
 
+##### Ubuntu helper shell script
+
+To aid users in installation, provided in `scripts/install_voiceless_server.sh` is a shell script for Ubuntu that does the following:
+- installs `build-essential`
+- installs `git`
+- installs **AskBob** (just the base dependencies needed to run as a voiceless server)
+- installs the `en_core_web_md` **SpaCy** model
+- trains **AskBob** based off the plugins within the `plugins` folder and the `config.ini` file
+
+This script must be copied to the root of an **AskBob** *project folder* and executed there with `sudo` privileges, e.g.
+```bash
+$ sudo ./install_voiceless_server.sh
+```
+
+**Note**: the script relies that Python 3.7 is accessible in the terminal using the command word `python`. On some systems, this is not the case and it is instead `python3` or potentially even `python3.7`, so you may have to run `alias python=python3` prior to running the script.
+
 #### Voice-enabled RESTful web API server mode
 
 To run the **AskBob** server in voice-enabled mode, where WAV files of speech can be uploaded to the **AskBob** server on the `/voicequery` endpoint from which **AskBob** will produce a JSON response, additional voice-related dependencies must be installed.
@@ -70,6 +86,23 @@ $ python -m pip install .[voice]
 ```
 
 Once the extra dependencies are installed, a [mozilla\DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.3)-compatible model and external scorer must be downloaded into the `data` folder of an **AskBob** *project folder* (with the runtime `config.ini` file updated to reflect the correct filenames) in order for **AskBob** to use those models for speech transcription.
+
+##### Ubuntu helper shell script
+
+To aid users in installation, provided in `scripts/install_voice_server.sh` is a shell script for Ubuntu that does the following:
+- installs `build-essential`
+- installs `git`
+- installs **AskBob** with the `voice` extra
+- installs the `en_core_web_md` **SpaCy** model
+- downloads a pre-trained English DeepSpeech model and external scorer
+- trains **AskBob** based off the plugins within the `plugins` folder and the `config.ini` file
+
+This script must be copied to the root of an **AskBob** *project folder* and executed there with `sudo` privileges, e.g.
+```bash
+$ sudo ./install_voice_server.sh
+```
+
+**Note**: the script relies that Python 3.7 is accessible in the terminal using the command word `python`. On some systems, this is not the case and it is instead `python3` or potentially even `python3.7`, so you may have to run `alias python=python3` prior to running the script.
 
 #### Interactive mode
 
