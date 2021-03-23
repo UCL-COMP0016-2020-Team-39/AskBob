@@ -312,6 +312,114 @@ Similarly, **AskBob** can be built with such support using the following command
 $ docker-compose build voice
 ```
 
+## Developing new AskBob plugins
+
+An **AskBob** plugin consists of a plugin folder containing at a very minimum a `config.json` file containing all of the data needed to train a Rasa model. **AskBob** is accompanied with a [configuration generator web app](https://askbobconfig.netlify.app/) ([GitHub](https://github.com/UCL-COMP0016-2020-Team-39/askbob-config)), which simplifies the drafting of these `config.json` files to aid non-experts in designing new **AskBob** plugins.
+
+A specification of all the supported JSON options for `config.json` files may be found in the `specification.json` file within this repository.
+
+Plugins may also contain Rasa custom action code, which allows **AskBob** plugins to run arbitrary Python code when certain spoken intents are triggered by the user (in either interactive or server modes).
+
+Files containing such custom action code must be listed within a Python list inside the `__init__.py` file at the root of the plugin folder in the following way (e.g. for a file containing custom action code called `actions.py`):
+```python
+__all__ = ["actions"]
+```
+
+Within `actions.py`, custom action code takes the following form:
+```python
+from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+import askbob.plugin
+
+
+@askbob.plugin.action("plugin_name", "action_name")
+class ActionHelloWorld(Action):
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        from datetime import datetime
+
+        dispatcher.utter_message(text="Hello, world")
+
+        return []
+
+```
+
+More detail on Rasa custom actions may be found at the [Rasa SDK documentation](https://rasa.com/docs/action-server/sdk-actions).
+
+### Plugin example
+
+An example of a plugin that does not contain any custom action code may be found under `examples/plugins/main`. If you are developing your own custom plugin, you may want to include `examples/plugins/main` within `plugins` in your **AskBob** *project folder*. It provides simple responses to "hello" and "goodbye", as well as an example on how to provide a natural language understanding fallback response triggered when **AskBob** cannot determine a user's intent.
+
+An example of a plugin that does use custom action code is the `time` plugin found at `examples/plugins/time`. It has the following `config.json` file contents:
+```json
+{
+    "plugin": "time",
+    "intents": [
+        {
+            "intent_id": "ask_time",
+            "examples": [
+                "What time is it?",
+                "What time is it right now?",
+                "What time is it now?",
+                "Tell me the time",
+                "Tell me the time right now",
+                "Tell me the time now"
+            ]
+        }
+    ],
+    "actions": [
+        "fetch_time"
+    ],
+    "skills": [
+        {
+            "description": "give the system time",
+            "intent": "ask_time",
+            "actions": [
+                "fetch_time"
+            ]
+        }
+    ]
+}
+
+```
+
+The `__init__.py` file within `examples/plugins/time` contains `__all__ = ["actions"]` and `actions.py` contains the following Python code:
+
+```python
+from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+import askbob.plugin
+
+
+@askbob.plugin.action("time", "fetch_time")
+class ActionFetchTime(Action):
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        from datetime import datetime
+
+        dispatcher.utter_message(text="The time is {0}.".format(
+            datetime.now().strftime("%H:%M")))
+
+        return []
+
+```
+
+Further examples of **AskBob** plugins may be found under the `examples/plugins` folder.
+
+### Plugin installation
+
+Plugins are installed by copying the plugin folder into the `plugins` folder of an **AskBob** *project folder*. **AskBob** must be retrained when new plugins are installed (`python -m askbob --setup`).
+
+A more visual way to view a summary of all the skills installed within a particular **AskBob** *project folder* than the `GET /skills` raw JSON endpoint is to use the [skills viewer web app](https://askbobskillsviewer.netlify.app/) ([GitHub](https://github.com/UCL-COMP0016-2020-Team-39/askbob-skills-viewer)). Run **AskBob** in server mode (`python -m askbob -s`) and provide a URL to the skills endpoint to the web app, e.g. `http://localhost:8000/skills`.
+
 ## Runtime Configuration Options
 
 ### Listener
