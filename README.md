@@ -128,11 +128,16 @@ $ sudo python setup.py install
 
 With `portaudio` properly installed, you will then need to find a [mozilla\DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.3)-compatible model and scorer to be used with **AskBob** if you have not done so already. Once downloaded, place the files in the `data` folder of an **AskBob** *project folder* and update the runtime configuration file (`config.ini`) with the correct file paths to the model and scorer, respectively.
 
-You may also have to modify the configuration depending on the text-to-speech voices made available by your operating system, which may be found using the following sequence of Python commands:
+You may also have to modify the configuration depending on the text-to-speech voices made available by your operating system to [pyttsx3](https://github.com/nateshmbhat/pyttsx3). These voices are listed when **AskBob** is started in interactive mode and may also be found using the following sequence of Python commands:
 ```python
 >>> import pyttsx3
 >>> print(*[voice.id for voice in pyttsx3.init().getProperty('voices')])
 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_11.0 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0
+```
+
+A shell script containing these Python commands is found at `scripts/get_voices.sh` and is executable from this directory using the following command:
+```bash
+$ ./scripts/get_voices.sh
 ```
 
 Once this is done, the additional **AskBob** `interactive` extra must be installed. When installing **AskBob** from `PyPI`, use the following command:
@@ -143,6 +148,11 @@ $ python -m pip install askbob[interactive]
 When installing **AskBob** from a clone of this GitHub repository, instead use the following command:
 ```bash
 $ python -m pip install .[interactive]
+```
+
+If **AskBob** is being run in interactive mode on a Linux system and the text-to-speech output fails to work, you may be missing a few additional system packages. On Ubuntu, these may be installed using the following command:
+```bash
+$ sudo apt update && sudo apt install espeak ffmpeg libespeak1
 ```
 
 ### Training
