@@ -1,4 +1,3 @@
-from askbob.speech.listener.mic import MicUtteranceService
 from askbob.speech.listener.file import FileUtteranceService
 from askbob.speech.transcriber import Transcriber, TranscriptionEvent
 
@@ -65,6 +64,13 @@ def test_transcriber_empty_with_scorer():
     transcriber = Transcriber(model=model, scorer=scorer, us=us, save_path='')
     transcriptions = transcriber.transcribe()
     assert next(transcriptions, True) == True
+
+
+def test_transcriber_suddenly_missing_utterance_service():
+    us = FileUtteranceService(filename='tests/empty.wav', aggressiveness=1)
+    transcriber = Transcriber(model=model, scorer=scorer, us=us, save_path='')
+    transcriber.us = None
+    transcriber.transcribe()
 
 
 def test_transcriber_empty_resampled_with_scorer():

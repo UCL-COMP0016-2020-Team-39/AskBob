@@ -1,4 +1,7 @@
 from askbob.speech.listener.mic import MicUtteranceService
+from askbob.speech.listener.file import FileUtteranceService
+
+import pytest
 
 
 def test_mic_utterance_service():
@@ -18,3 +21,8 @@ def test_mic_utterance_service_with_device_index():
     us = MicUtteranceService(device_index=device_index)
     assert us.stream.is_active()
     us._destroy()
+
+
+def test_file_error_dual_channel():
+    with pytest.raises(RuntimeError):
+        FileUtteranceService(filename='tests/dualchannel.wav')

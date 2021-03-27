@@ -18,5 +18,9 @@ exclude_lines =
     # Fix shutil bug where it does not appear in coverage reports
     shutil.rmtree
 
+    # This is tested but does not appear in coverage due to a bug
+    self.buffer_queue.put(in_data)
+    return (None, pyaudio.paContinue)
+
 [html]
 directory = cov_html

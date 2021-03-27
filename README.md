@@ -703,4 +703,13 @@ Tests (with code coverage report generation) may be run with the following comma
 $ python -m pytest tests/
 ```
 
+The coverage report may be viewed afterwards by running the following command:
+```bash
+$ cd cov_test && python -m http.server 80
+```
+
+And then navigating to `http://localhost/` in a browser.
+
 **Note**: the spaCy `en_core_web_md` model must be installed to run the test suite, as well as all dependencies (including interactive mode dependencies).
+
+The DeepSpeech model `data/deepspeech-0.9.1-models.pbmm` and scorer `data/deepspeech-0.9.1-models.scorer` must exist to run the test suite.
