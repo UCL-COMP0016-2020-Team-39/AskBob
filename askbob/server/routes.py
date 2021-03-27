@@ -1,6 +1,14 @@
 from sanic.response import text, json
 
 
+def get_intent_examples(plugin_config, intent_id):
+    for intent in plugin_config.get('intents', []):
+        if intent['intent_id'] == intent_id:
+            return intent['examples']
+
+    return []
+
+
 def routes(app, responder, plugin_configs):
     @app.route("/", methods=['GET', 'OPTIONS'])
     async def hello(request):
@@ -44,13 +52,6 @@ def routes(app, responder, plugin_configs):
 
     @app.route("/skills", methods=['GET', 'OPTIONS'])
     async def skills(request):
-        def get_intent_examples(plugin_config, intent_id):
-            for intent in plugin_config['intents']:
-                if intent['intent_id'] == intent_id:
-                    return intent['examples']
-
-            return []
-
         return json({
             'plugins': [
                 {

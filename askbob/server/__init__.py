@@ -4,14 +4,7 @@ import logging
 import json as Json
 
 
-def serve(responder: ResponseService, config: dict, voice: bool = False):
-    """Services responses to Ask Bob queries and provides information about loaded skills via RESTful endpoints.
-
-    Args:
-        responder (ResponseService): The response service handling queries.
-        config (dict): The runtime configuration (usually from config.ini).
-    """
-
+def make_app(responder: ResponseService, config: dict, voice: bool = False):
     from sanic import Sanic
 
     plugin_configs = Json.load(open(config['Plugins']['summary'],
@@ -37,6 +30,22 @@ def serve(responder: ResponseService, config: dict, voice: bool = False):
             return response.json({
                 "error": "Voice transcription is disabled on this server."
             }, status=503)
+
+    return app
+
+
+def serve(responder: ResponseService, config: dict, voice: bool = False):
+    """Services responses to Ask Bob queries and provides information about loaded skills via RESTful endpoints.
+
+    Args:
+        responder (ResponseService): The response service handling queries.
+        config (dict): The runtime configuration (usually from config.ini).
+    """
+    try:
+        app = make_app(responder, config, voice)
+    except Exception as e:
+        logging.error(f"Failed to start the Ask Bob HTTP server: {str(e)}")
+        return
 
     logging.info("Running the Ask Bob HTTP server.")
     app.run(host=config['Server'].get('host', '0.0.0.0'),

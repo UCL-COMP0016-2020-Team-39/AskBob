@@ -18,9 +18,17 @@ exclude_lines =
     # Fix shutil bug where it does not appear in coverage reports
     shutil.rmtree
 
+    # Cannot test KeyboardInterrupt
+    except KeyboardInterrupt:
+
     # This is tested but does not appear in coverage due to a bug
+    def callback(in_data, frame_count, time_info, status):
     self.buffer_queue.put(in_data)
     return (None, pyaudio.paContinue)
+    self.buffer_queue = queue.Queue()
+
+    # Another bug -- this is tested but not showing up in coverage
+    if not self.us:
 
 [html]
 directory = cov_html

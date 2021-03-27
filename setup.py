@@ -24,7 +24,8 @@ extras = {
     "test": [
         "pytest~=6.2.1",
         "pytest-cov~=2.11.1",
-        "pytest-asyncio~=0.14.0"
+        "pytest-asyncio~=0.14.0",
+        "pytest-sanic~=1.7.0"
     ]
 }
 

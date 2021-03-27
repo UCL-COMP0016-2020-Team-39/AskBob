@@ -53,7 +53,7 @@ async def interactive_loop(args, config, responder: ResponseService):
         transcriber = make_transcriber(
             config, args.device, args.rate, args.file, args.savepath)
     except Exception as e:
-        logging.error(f"Unable to make the transcriber: {e}")
+        logging.error(f"Unable to make the transcriber: {str(e)}")
         return
 
     speaker = TextToSpeechService(config['TTS']['voice_id'])
