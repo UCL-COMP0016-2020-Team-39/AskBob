@@ -141,6 +141,29 @@ def test_model_generator_domain_slots_float(tmp_path):
     assert 'max_value: 1.0' in content
 
 
+def test_model_generator_domain_slots_float_no_min_max(tmp_path):
+    location = str(tmp_path)
+    mg.generate_domain({
+        "intents": [{"intent_id": "greeting", "examples": ["foo", "bar", "baz"]}],
+        "slots": [{"slot_id": "foo", "type": "float", "influence_conversation": "true"}]
+    }, location, 'plugin')
+
+    content = (tmp_path / 'plugin.yml').read_text()
+    assert 'type: float' in content
+    assert 'influence_conversation: true' in content
+
+
+def test_model_generator_domain_slots_float_no_min_max_float(tmp_path):
+    location = str(tmp_path)
+    mg.generate_domain({
+        "intents": [{"intent_id": "greeting", "examples": ["foo", "bar", "baz"]}],
+        "slots": [{"slot_id": "foo", "type": "float"}]
+    }, location, 'plugin')
+
+    content = (tmp_path / 'plugin.yml').read_text()
+    assert 'type: float' in content
+
+
 def test_model_generator_domain_slots_categorical(tmp_path):
     location = str(tmp_path)
     mg.generate_domain({
