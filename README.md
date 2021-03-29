@@ -324,7 +324,7 @@ $ docker-compose build voice
 
 ## Developing new AskBob plugins
 
-An **AskBob** plugin consists of a plugin folder containing at a very minimum a `config.json` file containing all of the data needed to train a Rasa model. **AskBob** is accompanied with a [configuration generator web app](https://askbobconfig.netlify.app/) ([GitHub](https://github.com/UCL-COMP0016-2020-Team-39/askbob-config)), which simplifies the drafting of these `config.json` files to aid non-experts in designing new **AskBob** plugins.
+An **AskBob** plugin consists of a plugin folder containing at very minimum a `config.json` file containing all of the data needed to train a Rasa model. **AskBob** is accompanied with a [configuration generator web app](https://askbobconfig.netlify.app/) ([GitHub](https://github.com/UCL-COMP0016-2020-Team-39/askbob-config)), which simplifies the drafting of these `config.json` files to aid non-experts in designing new **AskBob** plugins.
 
 A specification of all the supported JSON options for `config.json` files may be found in the `specification.json` file within this repository.
 
