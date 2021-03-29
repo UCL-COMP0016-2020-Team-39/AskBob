@@ -32,7 +32,7 @@ extras = {
 extras["interactive"] += extras["voice"]
 
 setup(name='askbob',
-      version='0.0.3',
+      version='0.0.4',
       description='A customisable, federated, privacy-safe voice assistant deployable on low-power devices.',
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -47,6 +47,9 @@ setup(name='askbob',
           "sanic~=20.9.0",
           "Sanic-Cors~=0.10.0.post3",
           "coloredlogs~=10.0"
+      ],
+      classifiers=[
+          'License :: OSI Approved :: GNU Affero General Public License v3'
       ],
       extras_require=extras,
       include_package_data=True,

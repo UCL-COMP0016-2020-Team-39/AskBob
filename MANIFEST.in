@@ -1,8 +1,6 @@
 include .gitignore
 include config.ini
 include default_config.json
-include Dockerfile
-include pytest.ini
+include LICENSE
 
 graft requirements
-graft tests
