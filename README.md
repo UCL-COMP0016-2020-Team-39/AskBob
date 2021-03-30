@@ -712,4 +712,4 @@ And then navigating to `http://localhost/` in a browser.
 
 **Note**: the spaCy `en_core_web_md` model must be installed to run the test suite, as well as all dependencies (including interactive mode dependencies).
 
-The DeepSpeech model `data/deepspeech-0.9.1-models.pbmm` and scorer `data/deepspeech-0.9.1-models.scorer` must exist to run the test suite.
+The DeepSpeech model `data/deepspeech-0.9.1-models.pbmm` and scorer `data/deepspeech-0.9.1-models.scorer` must exist in order to run the test suite.
